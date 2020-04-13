@@ -6,6 +6,7 @@ paket-files/
 **/[Oo]bj/
 **/[Bb]in/
 .vs/
+nuget
 .ionide
 .vscode
 .idea

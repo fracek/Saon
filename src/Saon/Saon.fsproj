@@ -2,7 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Vason</RootNamespace>
+    <Authors>Francesco Ceccon</Authors>
+    <Description>Json parsing and validation using System.Text.Json</Description>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="paket.references" />

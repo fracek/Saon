@@ -19,6 +19,7 @@ module Paths =
   let root = __SOURCE_DIRECTORY__
   let sln = root </> "Saon.sln"
   let out = root </> "bin"
+  let nugetOut = root </> "nuget"
 
 
 Target.create "Clean" (fun _ ->
@@ -29,6 +30,14 @@ Target.create "Clean" (fun _ ->
 
 Target.create "Build" (fun _ ->
   DotNet.build id Paths.sln
+)
+
+Target.create "Pack" (fun _ ->
+  DotNet.pack (fun o ->
+    { o with
+        OutputPath = Some Paths.nugetOut
+    }
+  ) Paths.sln
 )
 
 Target.create "Test" (fun _ ->
@@ -45,6 +54,7 @@ Target.create "All" ignore
 "Clean"
   ==> "Build"
   ==> "Test"
+  ==> "Pack"
   ==> "All"
 
 Target.runOrDefault "All"

@@ -18,6 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F45357A7
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Saon.Tests", "tests\Saon.Tests\Saon.Tests.fsproj", "{BE4E7AB2-AE05-4149-93C9-FA5B8251DB43}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{AF4FFB92-9FC9-4F27-BDA4-BDC3CCA3DD28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E86E6231-8002-4578-9C9D-93A8ACEE8E77}"
+    ProjectSection(SolutionItems) = preProject
+        .github\workflows\build.yml = .github\workflows\build.yml
+    EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,5 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B7F27190-62E6-4055-8F42-422345C9E0C4} = {1A46DCF9-A66B-40CF-85AA-F8AF7208A3E8}
 		{BE4E7AB2-AE05-4149-93C9-FA5B8251DB43} = {F45357A7-D08A-421B-8CC9-4989859AA7BA}
+		{E86E6231-8002-4578-9C9D-93A8ACEE8E77} = {AF4FFB92-9FC9-4F27-BDA4-BDC3CCA3DD28}
 	EndGlobalSection
 EndGlobal
