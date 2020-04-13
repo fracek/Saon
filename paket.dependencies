@@ -1,0 +1,12 @@
+frameworks netstandard2.0, netcoreapp3.0
+storage none
+source https://api.nuget.org/v3/index.json
+
+nuget FSharp.Core ~> 4.7.0
+nuget System.Text.Json ~> 4.7.0
+
+nuget FsCheck.XUnit
+nuget FsUnit.xUnit
+nuget Microsoft.NET.Test.Sdk
+nuget xunit
+nuget xunit.runner.visualstudio

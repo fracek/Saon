@@ -1,0 +1,12 @@
+.paket/*
+!.paket/Paket.Restore.targets
+!.paket/paket.bootstrapper.proj
+paket-files/
+.fake/*
+**/[Oo]bj/
+**/[Bb]in/
+.vs/
+.ionide
+.vscode
+.idea
+*.user
