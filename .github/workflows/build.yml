@@ -13,3 +13,7 @@ jobs:
         with:
           dotnet-version: '3.1.100'
       - run: ./build.sh
+      - uses: actions/upload-artifact@v1
+        with:
+          name: nuget
+          path: bin/nuget
