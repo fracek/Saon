@@ -78,7 +78,8 @@ module ParserBuilder =
             let result = func propName propElement
             result, element
         else
-            ParsingFailed (Some propName, "The property is not present"), element
+            let msg = sprintf "The required property '%s' is missing" propName
+            Result.validationFail "missingProperty" propName msg, element
 
     let optionalProperty (propName : string) (func : string -> JsonElement -> Result<'T>) (element : JsonElement) =
         let found, propElement = element.TryGetProperty propName

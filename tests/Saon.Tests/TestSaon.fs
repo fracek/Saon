@@ -54,30 +54,16 @@ let validateLiquidity propName (value : string) =
     | "M" -> Result.success Maker
     | _ -> Result.validationFail "liquidity" propName "Invalid liquidity"
 
-let stringToDecimal propName (value : string) =
-    let parsed, decimalValue = Decimal.TryParse(value)
-    if parsed then
-        Result.success decimalValue
-    else
-        Result.parsingFail propName "Malformed decimal number"
-
-let stringToDateTimeOffset propName (value : string) =
-    let parsed, dt = DateTimeOffset.TryParse(value)
-    if parsed then
-        Result.success dt
-    else
-        Result.parsingFail propName "Malformed datetime"
-
 
 let parseFill = jsonParser {
-    let! tradeId = property "trade_id" Parse.int64
+    let! tradeId = property "trade_id" (Parse.int64 /> Validate.isGreaterThan 0L)
     let! productId = property "product_id" (Parse.string /> validateProductId)
-    let! price = property "price" (Parse.string /> stringToDecimal)
-    let! size = property "size" (Parse.string /> stringToDecimal)
+    let! price = property "price" (Parse.string /> Convert.stringToDecimal /> Validate.isGreaterThan 0m)
+    let! size = property "size" (Parse.string /> Convert.stringToDecimal)
     let! orderId = property "order_id" Parse.string
-    let! createdAt = property "created_at" (Parse.string /> stringToDateTimeOffset)
+    let! createdAt = property "created_at" (Parse.string /> Convert.stringToDateTimeOffset)
     let! liquidity = property "liquidity" (Parse.string /> validateLiquidity)
-    let! fee = property "fee" (Parse.string /> stringToDecimal)
+    let! fee = property "fee" (Parse.string /> Convert.stringToDecimal)
     let! settled = property "settled" Parse.bool
     let! side = property "side" (Parse.string /> validateSide)
     return
@@ -96,14 +82,14 @@ let parseFill = jsonParser {
 let parseFills = Parse.list parseFill
 
 let parseReportParams = jsonParser {
-    let! startDate = property "start_date" (Parse.string /> stringToDateTimeOffset)
-    let! endDate = property "end_date" (Parse.string /> stringToDateTimeOffset)
+    let! startDate = property "start_date" (Parse.string /> Convert.stringToDateTimeOffset)
+    let! endDate = property "end_date" (Parse.string /> Convert.stringToDateTimeOffset)
     return { StartDate = startDate; EndDate = endDate }
 }
 
 
 let parseReport = jsonParser {
-    let! completedAt = optionalProperty "completed_at" (Parse.string /> stringToDateTimeOffset)
+    let! completedAt = optionalProperty "completed_at" (Parse.string /> Convert.stringToDateTimeOffset)
     let! fileUrl = optionalProperty "file_url" Parse.string
     let! parameters = property "params" parseReportParams
     return
