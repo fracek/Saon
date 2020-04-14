@@ -69,7 +69,7 @@ let stringToDateTimeOffset propName (value : string) =
         Result.parsingFail propName "Malformed datetime"
 
 
-let parseFill = createRecordParser<Fill> () {
+let parseFill = jsonParser {
     let! tradeId = property "trade_id" Parse.int64
     let! productId = property "product_id" (Parse.string /> validateProductId)
     let! price = property "price" (Parse.string /> stringToDecimal)
@@ -95,14 +95,14 @@ let parseFill = createRecordParser<Fill> () {
 
 let parseFills = Parse.list parseFill
 
-let parseReportParams = createRecordParser<ReportParams> () {
+let parseReportParams = jsonParser {
     let! startDate = property "start_date" (Parse.string /> stringToDateTimeOffset)
     let! endDate = property "end_date" (Parse.string /> stringToDateTimeOffset)
     return { StartDate = startDate; EndDate = endDate }
 }
 
 
-let parseReport = createRecordParser<Report> () {
+let parseReport = jsonParser {
     let! completedAt = optionalProperty "completed_at" (Parse.string /> stringToDateTimeOffset)
     let! fileUrl = optionalProperty "file_url" Parse.string
     let! parameters = property "params" parseReportParams

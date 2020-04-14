@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{CB1D50
 		.gitignore = .gitignore
 		build.fsx = build.fsx
 		paket.dependencies = paket.dependencies
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+		LICENSE.md = LICENSE.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A46DCF9-A66B-40CF-85AA-F8AF7208A3E8}"
@@ -21,9 +23,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{AF4FFB92-9FC9-4F27-BDA4-BDC3CCA3DD28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E86E6231-8002-4578-9C9D-93A8ACEE8E77}"
-    ProjectSection(SolutionItems) = preProject
-        .github\workflows\build.yml = .github\workflows\build.yml
-    EndProjectSection
+				ProjectSection(SolutionItems) = preProject
+								.github\workflows\build.yml = .github\workflows\build.yml
+				EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

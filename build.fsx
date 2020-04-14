@@ -1,9 +1,4 @@
-#r "paket:
-nuget FSharp.Core ~> 4.7.0
-nuget Fake.Core.Target
-nuget Fake.DotNet.Cli
-nuget Fake.IO.FileSystem
-//"
+#r "paket: groupref build //"
 #load ".fake/build.fsx/intellisense.fsx"
 #nowarn "52"
 
@@ -18,9 +13,16 @@ open Fake.IO.Globbing.Operators
 module Paths =
   let root = __SOURCE_DIRECTORY__
   let sln = root </> "Saon.sln"
+  let releaseNotes = root </> "RELEASE_NOTES.md"
   let out = root </> "bin"
   let nugetOut = root </> "nuget"
 
+
+let release = ReleaseNotes.load Paths.releaseNotes
+
+let releaseProperties =
+  [ "Version", release.NugetVersion
+    "PackageReleaseNotes", String.concat "\n" release.Notes ]
 
 Target.create "Clean" (fun _ ->
   !! "**/bin"
@@ -32,14 +34,6 @@ Target.create "Build" (fun _ ->
   DotNet.build id Paths.sln
 )
 
-Target.create "Pack" (fun _ ->
-  DotNet.pack (fun o ->
-    { o with
-        OutputPath = Some Paths.nugetOut
-    }
-  ) Paths.sln
-)
-
 Target.create "Test" (fun _ ->
   DotNet.test (fun o ->
     { o with
@@ -49,12 +43,40 @@ Target.create "Test" (fun _ ->
   ) Paths.sln
 )
 
-Target.create "All" ignore
+Target.create "Pack" (fun _ ->
+  DotNet.pack (fun o ->
+    { o with
+        Configuration = DotNet.BuildConfiguration.Release
+        OutputPath = Some Paths.nugetOut
+        MSBuildParams = { o.MSBuildParams with Properties = releaseProperties }
+    }
+  ) Paths.sln
+)
+
+Target.create "NugetPush" (fun _ ->
+  let nugetApiKey = Environment.environVar "NUGET_API_KEY" |> Some
+  let nugetSource = Some "https://api.nuget.org/v3/index.json"
+  let nugetPackages = Paths.nugetOut </> sprintf "Saon.%s.nupkg" release.NugetVersion
+  DotNet.nugetPush (fun o ->
+    { o with
+        PushParams = { o.PushParams with
+                           ApiKey = nugetApiKey
+                           Source = nugetSource }
+    }
+  ) nugetPackages
+)
+
+Target.create "Default" ignore
+Target.create "Release" ignore
 
 "Clean"
   ==> "Build"
   ==> "Test"
-  ==> "Pack"
-  ==> "All"
+  ==> "Default"
 
-Target.runOrDefault "All"
+"Default"
+  ==> "Pack"
+  ==> "NugetPush"
+  ==> "Release"
+
+Target.runOrDefault "Default"

@@ -51,7 +51,7 @@ module Parser =
                 ValidationFailed errors, json'
 
 
-type RecordParserBuilder<'T>() =
+type JsonParserBuilder() =
     member __.Run (parser : Parser<'T>) =
         let validate (propName : string) (element : JsonElement) : Result<'T> =
             let result, _ = parser element
@@ -65,7 +65,7 @@ type RecordParserBuilder<'T>() =
 
 [<AutoOpen>]
 module ParserBuilder =
-    let createRecordParser<'T> () = RecordParserBuilder<'T>()
+    let jsonParser = JsonParserBuilder()
 
     let createRootParser (parser : string -> JsonElement -> Result<'T>) =
         let parse (document : JsonDocument) =
