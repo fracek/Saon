@@ -14,6 +14,8 @@
   <ItemGroup>
     <Compile Include="Saon.fs" />
     <Compile Include="Parse.fs" />
+    <Compile Include="Convert.fs" />
+    <Compile Include="Validate.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

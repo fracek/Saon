@@ -3,7 +3,8 @@ module Saon.Parse
 open System.Text.Json
 
 
-let combine (a : string -> 'T -> Result<'R>) (b : string -> 'R -> Result<'S>) =
+/// Return a new parser that pipes the result of the first into the second only if the first was successful.
+let pipe (a : string -> 'T -> Result<'R>) (b : string -> 'R -> Result<'S>) =
     fun propName aValue ->
         match a propName aValue with
         | Success bValue ->
@@ -12,21 +13,30 @@ let combine (a : string -> 'T -> Result<'R>) (b : string -> 'R -> Result<'S>) =
         | ParsingFailed (field, msg) -> ParsingFailed (field, msg)
 
 
+module Operators =
+    let (/>) a b = pipe a  b
+
+
+/// Return `ParsingFailed` if `f` raises an exception.
 let internal catchFail propName (f : unit -> 'T) =
     try
         f () |> Success
     with ex ->
         ParsingFailed (Some propName, ex.Message)
 
+/// Get the `element` string value.
 let string propName (element : JsonElement) =
     catchFail propName (fun _ -> element.GetString())
 
+/// Get the `element` int64 value.
 let int64 propName (element : JsonElement) =
     catchFail propName (fun _ -> element.GetInt64())
 
+/// Get the `element` bool value.
 let bool propName (element : JsonElement) =
     catchFail propName (fun _ -> element.GetBoolean())
 
+/// Apply the `inner` parser to each children of the json array `element`.
 let list (inner : string -> JsonElement -> Result<'T>) propName (element : JsonElement) =
     let folder state el =
         match state with
@@ -47,7 +57,3 @@ let list (inner : string -> JsonElement -> Result<'T>) propName (element : JsonE
     match result with
     | Success xs -> List.rev xs |> Success
     | fail -> fail
-
-
-module Operators =
-    let (/>) a b = combine a b

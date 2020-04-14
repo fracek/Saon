@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{CB1D50
 		paket.dependencies = paket.dependencies
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 		LICENSE.md = LICENSE.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A46DCF9-A66B-40CF-85AA-F8AF7208A3E8}"
