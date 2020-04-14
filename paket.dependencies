@@ -4,6 +4,7 @@ source https://api.nuget.org/v3/index.json
 
 nuget FSharp.Core ~> 4.7.0
 nuget System.Text.Json ~> 4.7.0
+nuget Microsoft.AspNetCore.Http.Features ~> 3.1.0
 
 nuget FsCheck.XUnit
 nuget FsUnit.xUnit

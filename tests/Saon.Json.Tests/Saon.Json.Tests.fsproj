@@ -3,18 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>Vason.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestSaon.fs" />
-    <Compile Include="TestParse.fs" />
+    <Compile Include="TestParser.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Saon\Saon.fsproj" />
+    <ProjectReference Include="..\..\src\Saon.Json\Saon.Json.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
