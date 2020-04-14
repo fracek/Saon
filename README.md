@@ -1,8 +1,8 @@
 # Saon: parse and validate JSON
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fracek/Saon/Build)
-![Nuget](https://img.shields.io/nuget/v/Saon)
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Saon)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fracek/Saon/Build)](https://github.com/fracek/Saon/actions)
+[![Nuget](https://img.shields.io/nuget/v/Saon)](https://www.nuget.org/packages/Saon/)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Saon)](https://www.nuget.org/packages/Saon/)
 
 
 **WARNING: this is an early release of Saon. Expect the API to change.**
