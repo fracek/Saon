@@ -9,11 +9,12 @@
     <Tags>F#;FSharp;Json</Tags>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="paket.references" />
+    <Content Include="paket.references" />        
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Saon.Json\Saon.Json.fsproj" />
-    <ProjectReference Include="..\Saon.Query\Saon.Query.fsproj" />
+    <Compile Include="Parser.fs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Saon.Shared\Saon.Shared.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
