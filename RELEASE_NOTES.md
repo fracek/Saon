@@ -1,4 +1,7 @@
-## 1.0.1-pre-3 - Next
+## 1.0.1 - (2020-04-15)
+ * Release
+
+## 1.0.1-pre-3 - (2020-04-15)
  * Add `Saon.Query` module to parse ASP.NET Core query collections
  * Add more validators and converters
  

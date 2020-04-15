@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Francesco Ceccon</Authors>
-    <Description>Json parsing and validation using System.Text.Json</Description>
+    <Description>Parse and validate ASP.NET Core query strings.</Description>
     <PackageProjectUrl>https://github.com/fracek/Saon</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Tags>F#;FSharp;Json</Tags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="paket.references" />        
