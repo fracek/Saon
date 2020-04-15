@@ -92,5 +92,18 @@ module Parser =
             | ParsingFailed (field, msg) -> ParsingFailed (field, msg)
 
 
+type ParserBuilder<'E>() =
+    member __.Run (parser : Parser<'T, 'E>) =
+        let validate (element : 'E) : ParserResult<'T> =
+            let result, _ = parser element
+            result
+        validate
+
+    member __.Bind(parser, f) = Parser.bind f parser
+    member __.Zero () = Parser.init ()
+    member __.Return (value : 'R) : Parser<'R, 'E> = Parser.init value
+
+
+
 module Operators =
     let (/>) a b = Parser.pipe a b
