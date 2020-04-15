@@ -10,12 +10,14 @@ type ValidationError =
       Message : string }
 
 
+type ValidationFailedMap = Map<string, ValidationError list>
+
 /// Result after parsing and validating.
 type ParserResult<'T> =
     /// Parsing failed, for example a syntax error.
     | ParsingFailed of field: string option * message: string
     /// Validation failed.
-    | ValidationFailed of Map<string, ValidationError list>
+    | ValidationFailed of ValidationFailedMap
     /// Success.
     | Success of 'T
 
@@ -57,6 +59,16 @@ module ParserResult =
         | Success v -> Success (f v)
         | ParsingFailed (field, msg) -> ParsingFailed (field, msg)
         | ValidationFailed failMap -> ValidationFailed failMap
+
+
+module ValidationFailedMap =
+    /// Joins two validation failed map by concatenating errors for the same key.
+    let merge (map1 : ValidationFailedMap) (map2 : ValidationFailedMap) : ValidationFailedMap =
+        let folder rmap k v =
+            match Map.tryFind k rmap with
+            | None -> Map.add k v rmap
+            | Some vs -> Map.add k (List.append v vs) rmap
+        Map.fold folder map1 map2
 
 
 module Parser =
