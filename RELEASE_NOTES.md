@@ -1,4 +1,8 @@
-## 1.0.1-pre-2 - Next
+## 1.0.1-pre-3 - Next
+ * Add `Saon.Query` module to parse ASP.NET Core query collections
+ * Add more validators and converters
+ 
+## 1.0.1-pre-2 - (2020-04-14)
  * Add `Validate` and `Convert` modules
 
 ### 1.0.1-pre-1 - (2020-04-14)
