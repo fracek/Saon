@@ -12,7 +12,10 @@
     <Content Include="paket.references" />        
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library.fs" />
+    <Compile Include="Parser.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Saon.Shared\Saon.Shared.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

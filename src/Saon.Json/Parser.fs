@@ -6,22 +6,9 @@ open Saon
 /// A `JsonParser` parses `JsonElement`s.
 type JsonParser<'T> = Parser<'T, JsonElement>
 
-
-type JsonObjectParserBuilder() =
-    member __.Run (parser : JsonParser<'T>) =
-        let validate (element : JsonElement) : ParserResult<'T> =
-            let result, _ = parser element
-            result
-        validate
-
-    member __.Bind(parser, f) = Parser.bind f parser
-    member __.Zero () = Parser.init ()
-    member __.Return (value : 'R) : JsonParser<'R> = Parser.init value
-
-
 [<AutoOpen>]
 module ParserBuilder =
-    let jsonObjectParser = JsonObjectParserBuilder()
+    let jsonObjectParser = ParserBuilder<JsonElement>()
 
     let createRootParser (parser : JsonElement -> ParserResult<'T>) =
         let parse (document : JsonDocument) =
@@ -51,7 +38,7 @@ module Json =
             let result = func propName propElement
             result, element
         else
-            let msg = sprintf "The required property '%s' is missing" propName
+            let msg = sprintf "required property '%s' is missing" propName
             ParserResult.validationFail "missingProperty" propName msg, element
 
     let optionalProperty (propName : string) (func : Transformer<JsonElement, 'T>) (element : JsonElement) =
