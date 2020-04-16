@@ -98,7 +98,7 @@ let hasMaxLength maxLength : Validator<seq<'T>> =
 let hasLengthBetween minLength maxLength : Validator<seq<'T>> =
     fun propName (value : seq<'T>) ->
         let length = Seq.length value
-        if minLength <= length <= maxLength then
+        if minLength <= length && length <= maxLength then
             ParserResult.success value
         else
             let msg = sprintf "must be between %O and %O elements long" minLength maxLength
