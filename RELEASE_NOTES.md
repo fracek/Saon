@@ -1,3 +1,8 @@
+# Release Notes
+
+## 1.0.2-pre1 - Next
+ * Improved documentation
+ 
 ## 1.0.1 - (2020-04-15)
  * Release
 

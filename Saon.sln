@@ -38,6 +38,35 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Saon.Shared.Tests", "tests\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Saon.Query.Tests", "tests\Saon.Query.Tests\Saon.Query.Tests.fsproj", "{A0720523-E5B1-4D81-B837-D499DCFFE10D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{2C4645F3-3557-4866-999E-E94B9EFE10FA}"
+ProjectSection(SolutionItems) = preProject
+	docs\content\index.md = docs\content\index.md
+	docs\content\gettingstarted.md = docs\content\gettingstarted.md
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{3CC95212-808C-4372-9E04-F77A1FC08FF4}"
+ProjectSection(SolutionItems) = preProject
+	docs\templates\template.cshtml = docs\templates\template.cshtml
+	docs\templates\docpage.cshtml = docs\templates\docpage.cshtml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "reference", "reference", "{A781098B-161F-4250-BB16-953B87782C69}"
+ProjectSection(SolutionItems) = preProject
+	docs\templates\reference\module.cshtml = docs\templates\reference\module.cshtml
+	docs\templates\reference\namespaces.cshtml = docs\templates\reference\namespaces.cshtml
+	docs\templates\reference\part-members.cshtml = docs\templates\reference\part-members.cshtml
+	docs\templates\reference\part-nested.cshtml = docs\templates\reference\part-nested.cshtml
+	docs\templates\reference\type.cshtml = docs\templates\reference\type.cshtml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{D317D890-73C0-4CAD-B0CE-573837788B2D}"
+ProjectSection(SolutionItems) = preProject
+	docs\assets\style.css = docs\assets\style.css
+	docs\assets\tips.js = docs\assets\tips.js
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,5 +174,9 @@ Global
 		{B914EF3A-535C-4239-9D09-1A5F390E9DB7} = {F45357A7-D08A-421B-8CC9-4989859AA7BA}
 		{15D6A8A1-36C7-4C82-B19C-C262E6DDADEC} = {F45357A7-D08A-421B-8CC9-4989859AA7BA}
 		{A0720523-E5B1-4D81-B837-D499DCFFE10D} = {F45357A7-D08A-421B-8CC9-4989859AA7BA}
+		{2C4645F3-3557-4866-999E-E94B9EFE10FA} = {FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}
+		{3CC95212-808C-4372-9E04-F77A1FC08FF4} = {FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}
+		{A781098B-161F-4250-BB16-953B87782C69} = {3CC95212-808C-4372-9E04-F77A1FC08FF4}
+		{D317D890-73C0-4CAD-B0CE-573837788B2D} = {FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}
 	EndGlobalSection
 EndGlobal

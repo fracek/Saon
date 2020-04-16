@@ -31,7 +31,7 @@ let parseListOfObjects = Json.list (Json.object parseA)
 let ``parse nested records`` () =
     let json = """ { "a": { "b": 10, "c": "nice" }, "d": "foobar" } """
     let document = JsonDocument.Parse(json)
-    match (createRootParser parseB) document with
+    match (Json.createDocumentParser parseB) document with
     | Success r ->
         r.A.B |> should equal 10L
         r.A.C |> should equal "nice"
@@ -43,7 +43,7 @@ let ``parse nested records`` () =
 let ``validation error on nested field`` () =
     let json = """ { "a": { "b": 10, "c": "" }, "d": "foobar" } """
     let document = JsonDocument.Parse(json)
-    match (createRootParser parseB) document with
+    match (Json.createDocumentParser parseB) document with
     | ValidationFailed failMap ->
         Map.count failMap |> should equal 1
         let err = Map.tryFind "a.c" failMap
@@ -58,7 +58,7 @@ let ``validation error on nested field`` () =
 let ``parse list of strings`` () =
     let json = """ ["a", "b", "c"] """
     let document = JsonDocument.Parse(json)
-    match (createRootParser <| parseListOfStrings "") document with
+    match (Json.createDocumentParser <| parseListOfStrings "") document with
     | Success xs ->
         xs.Length |> should equal 3
         xs.Head |> should equal "a"
@@ -70,7 +70,7 @@ let ``parse list of strings`` () =
 let ``validation error on list of strings`` () =
     let json = """ ["a", "", "c", ""] """
     let document = JsonDocument.Parse(json)
-    match (createRootParser <| parseListOfStrings "") document with
+    match (Json.createDocumentParser <| parseListOfStrings "") document with
     | ValidationFailed failMap ->
         Map.count failMap |> should equal 2
         Map.tryFind "[1]" failMap |> Option.isSome |> should be True
@@ -82,7 +82,7 @@ let ``validation error on list of strings`` () =
 let ``parse list of objects`` () =
     let json = """ [{"b": 10, "c": "xxx"}] """
     let document = JsonDocument.Parse(json)
-    match (createRootParser <| parseListOfObjects "") document with
+    match (Json.createDocumentParser <| parseListOfObjects "") document with
     | Success [r] ->
         r.B |> should equal 10L
         r.C |> should equal "xxx"
@@ -93,7 +93,7 @@ let ``parse list of objects`` () =
 let ``validation error on list of objects`` () =
     let json = """ [{"b": 10, "c": "xxx"}, {"b": -2, "c": ""}] """
     let document = JsonDocument.Parse(json)
-    match (createRootParser <| parseListOfObjects "") document with
+    match (Json.createDocumentParser <| parseListOfObjects "") document with
     | ValidationFailed failMap ->
         Map.count failMap |> should equal 1
         Map.tryFind "[1].c" failMap |> Option.isSome |> should be True

@@ -12,6 +12,14 @@ nuget Microsoft.NET.Test.Sdk
 nuget xunit
 nuget xunit.runner.visualstudio
 
+
+group FSharpFormattingBuild
+  source https://api.nuget.org/v3/index.json
+
+  nuget FSharp.Formatting
+  nuget FSharp.Formatting.CommandTool
+
+
 // [ FAKE GROUP ]
 group Build
   source https://api.nuget.org/v3/index.json
@@ -23,5 +31,7 @@ group Build
   nuget Fake.DotNet.Cli
   nuget Fake.Core.ReleaseNotes
   nuget Fake.DotNet.AssemblyInfoFile
+  nuget Fake.DotNet.FSFormatting
   nuget Fake.Core.Environment
+  nuget Fake.Core.Process
   nuget Fake.IO.FileSystem

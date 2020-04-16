@@ -1,6 +1,6 @@
+/// Provide common validation functions.
 module Saon.Validate
 
-/// Provide common validation functions.
 open System
 open System.Text.RegularExpressions
 
