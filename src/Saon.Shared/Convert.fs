@@ -28,3 +28,12 @@ let internal parseISO8601DateTimeOffset (value : string) =
 /// Convert from string to DateTimeOffset, the date is formatted as ISO8601.
 let stringToDateTimeOffsetISO8601 : Transformer<string, DateTimeOffset> =
     stringToDateTimeOffset parseISO8601DateTimeOffset
+
+/// Convert from a string to a Guid
+let stringToGuid : Transformer<string, Guid> =
+    fun propName (value : string) ->
+        let parsed, result = Guid.TryParse(value)
+        if parsed then
+            ParserResult.success result
+        else
+            ParserResult.validationFail "stringToGuid" propName "malformed guid"
