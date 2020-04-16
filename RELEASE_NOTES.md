@@ -1,6 +1,7 @@
 # Release Notes
 
 ## 1.0.2-pre1 - Next
+ * Add `stringToGuid` converter
  * Fix `hasLengthBetween` validator
  * Improve documentation
  
