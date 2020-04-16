@@ -8,18 +8,15 @@ type JsonParser<'T> = Parser<'T, JsonElement>
 
 [<AutoOpen>]
 module ParserBuilder =
+    /// Computational expression to parse JSON objects.
     let jsonObjectParser = ParserBuilder<JsonElement>()
-
-    let createRootParser (parser : JsonElement -> ParserResult<'T>) =
-        let parse (document : JsonDocument) =
-            parser document.RootElement
-        parse
 
 
 [<RequireQualifiedAccess>]
 module Json =
     open System
 
+    /// Create a parser to parse `JsonDocument`s.
     let createDocumentParser (parser : JsonElement -> ParserResult<'T>) =
         let parse (document : JsonDocument) =
             parser document.RootElement
@@ -32,6 +29,7 @@ module Json =
         with ex ->
             ParsingFailed (Some propName, ex.Message)
 
+    /// Apply the transformation `func` to the `element` property `propName`.
     let property (propName : string) (func : Transformer<JsonElement, 'T>) (element : JsonElement) =
         let found, propElement = element.TryGetProperty propName
         if found then
@@ -41,6 +39,7 @@ module Json =
             let msg = sprintf "required property '%s' is missing" propName
             ParserResult.validationFail "missingProperty" propName msg, element
 
+    /// Apply the transformation `func` to the `element` optional property `propName`.
     let optionalProperty (propName : string) (func : Transformer<JsonElement, 'T>) (element : JsonElement) =
         let found, propElement = element.TryGetProperty propName
         if found then
@@ -61,6 +60,7 @@ module Json =
     let bool propName (element : JsonElement) =
         catchFail propName (fun _ -> element.GetBoolean())
 
+    /// Parse the `element` as a JSON object using the `inner` parser.
     let object (inner : JsonElement -> ParserResult<'T>) propName (element : JsonElement) =
         let addNestLevel field =
             if String.IsNullOrEmpty(propName) then

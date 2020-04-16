@@ -11,3 +11,6 @@ nuget
 .vscode
 .idea
 *.user
+docs/content/RELEASE_NOTES.md
+docs/output
+packages

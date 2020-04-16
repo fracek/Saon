@@ -10,6 +10,7 @@ type ValidationError =
       Message : string }
 
 
+/// Map containing a list of `ValidationError`s for each field.
 type ValidationFailedMap = Map<string, ValidationError list>
 
 /// Result after parsing and validating.
@@ -32,6 +33,7 @@ type Validator<'T> = Transformer<'T, 'T>
 type Parser<'T, 'E> = 'E -> ParserResult<'T> * 'E
 
 
+/// ParserResult functions.
 module ParserResult =
     /// Return a success result.
     let success value = Success value
@@ -61,6 +63,7 @@ module ParserResult =
         | ValidationFailed failMap -> ValidationFailed failMap
 
 
+/// Functions to work with `ValidationFailedMap`.
 module ValidationFailedMap =
     /// Joins two validation failed map by concatenating errors for the same key.
     let merge (map1 : ValidationFailedMap) (map2 : ValidationFailedMap) : ValidationFailedMap =
@@ -71,10 +74,13 @@ module ValidationFailedMap =
         Map.fold folder map1 map2
 
 
+/// Parser functions.
 module Parser =
+    /// Create a parser with initial `value`.
     let init (value : 'T) : Parser<'T, 'E> =
         fun el -> (Success value, el)
 
+    /// Bind implementation for the parser.
     let bind (f : 'T -> Parser<'R, 'E>) (x : Parser<'T, 'E>) : Parser<'R, 'E> =
         fun json ->
             match x json with
@@ -92,6 +98,7 @@ module Parser =
             | ParsingFailed (field, msg) -> ParsingFailed (field, msg)
 
 
+/// Computational Expression builder to build parsers.
 type ParserBuilder<'E>() =
     member __.Run (parser : Parser<'T, 'E>) =
         let validate (element : 'E) : ParserResult<'T> =
@@ -104,6 +111,6 @@ type ParserBuilder<'E>() =
     member __.Return (value : 'R) : Parser<'R, 'E> = Parser.init value
 
 
-
+/// Convenience operators to combine converters and validators.
 module Operators =
     let (/>) a b = Parser.pipe a b

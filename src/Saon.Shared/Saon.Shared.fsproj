@@ -7,9 +7,10 @@
     <PackageProjectUrl>https://github.com/fracek/Saon</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Tags>F#;FSharp;Json</Tags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="paket.references" />        
+    <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parser.fs" />

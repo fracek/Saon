@@ -1,6 +1,6 @@
+/// Provide useful conversion functions.
 module Saon.Convert
 
-/// Provide useful conversion functions.
 open System
 
 /// Convert from string to decimal.
