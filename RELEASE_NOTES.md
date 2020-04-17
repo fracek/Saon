@@ -1,6 +1,9 @@
 # Release Notes
 
-## 1.0.2-pre1 - Next
+## 1.0.2-pre2 - Next
+ * Trigger build
+ 
+## 1.0.2-pre1 - (2020-04-17)
  * Add `oneOf`, `onlyOneOf` and `embeddedObject` Json parsers
  * Improve `hasMinLength`, `hasMaxLength` and `hasLengthBetween` validators
  * Add `stringToGuid` converter
