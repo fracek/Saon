@@ -119,13 +119,21 @@ Target.create "Pack" (fun _ ->
 Target.create "NugetPush" (fun _ ->
     let nugetApiKey = Environment.environVar "NUGET_API_KEY" |> Some
     let nugetSource = Some "https://api.nuget.org/v3/index.json"
-    let nugetPackages = Paths.nugetOut </> sprintf "Saon.*%s.nupkg" release.NugetVersion
-    DotNet.nugetPush (fun o ->
-        { o with
-              PushParams =
-                  { o.PushParams with
-                        ApiKey = nugetApiKey
-                        Source = nugetSource } }) nugetPackages)
+
+    let nugetPackages =
+        [ Paths.nugetOut </> sprintf "Saon.Shared.%s.nupkg" release.NugetVersion
+          Paths.nugetOut </> sprintf "Saon.Json.%s.nupkg" release.NugetVersion
+          Paths.nugetOut </> sprintf "Saon.Query.%s.nupkg" release.NugetVersion
+          Paths.nugetOut </> sprintf "Saon.%s.nupkg" release.NugetVersion ]
+    nugetPackages
+    |> List.iter (fun pkg ->
+        printfn "Pushing %s" pkg
+        DotNet.nugetPush (fun o ->
+            { o with
+                  PushParams =
+                      { o.PushParams with
+                            ApiKey = nugetApiKey
+                            Source = nugetSource } }) pkg))
 
 Target.create "Default" ignore
 Target.create "Release" ignore
