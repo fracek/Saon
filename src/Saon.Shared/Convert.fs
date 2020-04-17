@@ -37,3 +37,8 @@ let stringToGuid : Transformer<string, Guid> =
             ParserResult.success result
         else
             ParserResult.validationFail "stringToGuid" propName "malformed guid"
+
+/// Convert `value` using `func`.
+let withFunction (func : 'T -> 'R) : Transformer<'T, 'R> =
+    fun _ (value : 'T) ->
+        func value |> ParserResult.Success

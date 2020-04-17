@@ -1,0 +1,20 @@
+### Post request to the create endpoint. Correct payload
+POST http://localhost:5000/
+Content-Type: application/json
+
+{ "name": "Su", "email": "su@foo.bar" }
+
+### Contact lookup. Correct query string
+GET http://localhost:5000/?type=email&value=su@foo.bar
+
+### Validation failure.
+GET http://localhost:5000/?type=email
+
+### Validation failure.
+POST http://localhost:5000/
+Content-Type: application/json
+
+{ "name": "", "email": "su@foo.bar" }
+
+### Validation failure.
+GET http://localhost:5000/?type=email&value=su

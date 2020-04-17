@@ -1,11 +1,11 @@
 @if (Enumerable.Count(Model.Types) > 0 || Enumerable.Count(Model.Modules) > 0)
 {
-    <table class="highlight type-list">
+    <table class="table table-bordered member-list">
         <thead>
-            <tr>
-                <td>Type or Module</td>
-                <td>Description</td>
-            </tr>
+        <tr>
+            <td>Type or Module</td>
+            <td>Description</td>
+        </tr>
         </thead>
         <tbody>
         @foreach (var it in Model.Types)

@@ -65,6 +65,16 @@ let mustNot (predicate : 'T -> bool) : Validator<'T> =
         else
             ParserResult.validationFail "mustNot" propName "predicate must be false"
 
+/// Validate if `value `is in `validValues`.
+let isIn (validValues : seq<'T>) : Validator<'T> =
+    fun propName (value : 'T) ->
+        if Seq.contains value validValues then
+            ParserResult.success value
+        else
+            let msg =
+                String.concat ", " (Seq.map string validValues)
+                |> sprintf "must be in %s"
+            ParserResult.validationFail "isIn" propName msg
 
 // Sequences
 

@@ -1,3 +1,11 @@
+.main-content {
+    margin-top: 3rem;
+}
+
+.main-content table {
+    width: 100%;
+}
+
 table.type-list thead {
     font-weight: bold;
 }
@@ -9,47 +17,48 @@ table.type-list thead {
 
 /* identifier */
 span.i {
-    color: #000000;
+    color: #383838;
 }
 
 /* comment */
 span.c {
-    color: #008000;
+    font-style: italic;
+    color: #248700;
 }
 
 /* inactive code */
 span.inactive {
-    color: #808080;
+    color: #989898;
 }
 
 /* keywords */
 span.k {
-    color: #000080;
+    color: #0F54D6;
 }
 
 /* numbers */
 span.n {
-    color: #008000;
+    color: #AB2F6B;
 }
 
 /* operators */
 span.o {
-    color: #800080;
+    color: #383838;
 }
 
 /* preprocessor */
 span.prep {
-    color: #800080;
+    color: #0F54D6;
 }
 
 /* string */
 span.s {
-    color: #808000;
+    color: #8C6C41;
 }
 
 /* line number */
 span.l {
-    color: #80b0b0;
+    color: #BABABA;
 }
 
 /* fsi output */
@@ -87,6 +96,10 @@ pre a.fssniplink {
 }
 
 /* Optionally, also configure how the PRE element and TABLE.PRE look */
+table.pre {
+    margin-bottom: 2rem;
+}
+
 table.pre pre {
     padding: 0px;
     margin: 0px;
@@ -95,11 +108,11 @@ table.pre pre {
 
 pre, table.pre td {
     padding: 9.5px;
-    background: #f5f5f5;
+    background: #FDFDFD;
     border: solid 1px black;
     border-radius: 4px;
     border-color: rgba(0, 0, 0, 0.15);
-    margin: 0px 0px 10px 0px;
+    margin: 0;
 }
 
 table.pre td.lines {
@@ -109,15 +122,20 @@ table.pre td.lines {
     padding-right: 0px;
 }
 
+table.pre .fssnip {
+    overflow-y: hidden;
+}
+
 table.pre td.snippet {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     border-left-style: none;
     padding-left: 4px;
+    width: 100%;
 }
 
 code, pre, pre code {
-    font-size: 1em;
+    font-size: 0.9em;
     font-family: consolas, monaco, 'Lucida Console', monospace;
-    line-height: 13pt;
+    line-height: 1.1em;
 }
