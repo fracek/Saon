@@ -48,6 +48,10 @@ module Json =
         else
             ParserResult.success None, element
 
+    /// Parse part of the current `element` as a JSON object using the `inner` parser.
+    let embeddedObject (inner : JsonElement -> ParserResult<'T>) (element : JsonElement) =
+        inner element, element
+
     /// Get the `element` string value.
     let string propName (element : JsonElement) =
         catchFail propName (fun _ -> element.GetString())
@@ -114,3 +118,39 @@ module Json =
         match result with
         | Success xs, _ -> List.rev xs |> Success
         | fail, _ -> fail
+
+    let internal transformerThatMatches (element : JsonElement) (propName : string, func) =
+        let found, propElement = element.TryGetProperty propName
+        if found then
+            Some (propElement, propName, func)
+        else
+            None
+
+    /// Matches the first of properties it finds, applying the transformer to it.
+    let oneOf (matchers : (string * Transformer<JsonElement, 'T>) list) (element : JsonElement) =
+        let childElementWithTransformer =
+            matchers
+            |> List.tryPick (transformerThatMatches element)
+
+        match childElementWithTransformer with
+        | Some (child, propName, func) ->
+            func propName child, element
+        | None ->
+            let props = List.map fst matchers |> String.concat ", "
+            let msg = sprintf "must have one of the following properties: %s" props
+            ParserResult.validationFail "oneOf" "" msg, element
+
+    /// Matches only one of the properties, applying the transformer to it.
+    /// Returns a `ValidationError` if more than one property matches.
+    let onlyOneOf (matchers : (string * Transformer<JsonElement, 'T>) list) (element : JsonElement) =
+        let childrenElementWithTransformer =
+            matchers
+            |> List.choose (transformerThatMatches element)
+
+        match childrenElementWithTransformer with
+        | [child, propName, func] ->
+            func propName child, element
+        | _ ->
+            let props = List.map fst matchers |> String.concat ", "
+            let msg = sprintf "must have only one of the following properties: %s" props
+            ParserResult.validationFail "onlyOneOf" "" msg, element
