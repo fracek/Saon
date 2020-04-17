@@ -1,0 +1,141 @@
+.main-content {
+    margin-top: 3rem;
+}
+
+.main-content table {
+    width: 100%;
+}
+
+table.type-list thead {
+    font-weight: bold;
+}
+
+.github-link {
+    float: right;
+    text-decoration: none;
+}
+
+/* identifier */
+span.i {
+    color: #383838;
+}
+
+/* comment */
+span.c {
+    font-style: italic;
+    color: #248700;
+}
+
+/* inactive code */
+span.inactive {
+    color: #989898;
+}
+
+/* keywords */
+span.k {
+    color: #0F54D6;
+}
+
+/* numbers */
+span.n {
+    color: #AB2F6B;
+}
+
+/* operators */
+span.o {
+    color: #383838;
+}
+
+/* preprocessor */
+span.prep {
+    color: #0F54D6;
+}
+
+/* string */
+span.s {
+    color: #8C6C41;
+}
+
+/* line number */
+span.l {
+    color: #BABABA;
+}
+
+/* fsi output */
+span.fsi {
+    font-style: italic;
+    color: #606060;
+}
+
+/* omitted */
+span.omitted {
+    border: solid 1px #d8d8d8;
+    color: #808080;
+    padding: 0px 0px 1px 0px;
+    background: #fafafa;
+}
+
+span.cerr {
+    background: url(tilde.png) repeat-x left bottom;
+}
+
+div.tip {
+    padding: 0.5rem;
+    border: 1px solid #d7d7d7;
+    background: #FFF;
+    display: none;
+    pointer-events: none;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.33);
+}
+
+pre a.fssniplink {
+    position: absolute;
+    bottom: 0.3em;
+    right: 0.3em;
+    color: #a8a8a8;
+}
+
+/* Optionally, also configure how the PRE element and TABLE.PRE look */
+table.pre {
+    margin-bottom: 2rem;
+}
+
+table.pre pre {
+    padding: 0px;
+    margin: 0px;
+    border-style: none;
+}
+
+pre, table.pre td {
+    padding: 9.5px;
+    background: #FDFDFD;
+    border: solid 1px black;
+    border-radius: 4px;
+    border-color: rgba(0, 0, 0, 0.15);
+    margin: 0;
+}
+
+table.pre td.lines {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-right-style: none;
+    padding-right: 0px;
+}
+
+table.pre .fssnip {
+    overflow-y: hidden;
+}
+
+table.pre td.snippet {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-left-style: none;
+    padding-left: 4px;
+    width: 100%;
+}
+
+code, pre, pre code {
+    font-size: 0.9em;
+    font-family: consolas, monaco, 'Lucida Console', monospace;
+    line-height: 1.1em;
+}

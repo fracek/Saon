@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Convert - Saon</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a href="/index.html" class="navbar-brand">Saon</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/index.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="tutorialDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutorials
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="tutorialDropdownLink">
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/giraffe-tutorial.html">Using with Giraffe</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/json-tutorial.html">Parsing json data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/query-tutorial.html">Parsing query strings</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/validate-tutorial.html">Validating data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/convert-tutorial.html">Converting data</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/reference/index.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="main-content">
+    <div class="container">
+        
+
+
+
+<h1>Convert</h1>
+<p>
+  <span>Namespace: Saon</span><br />
+  </p>
+<div class="xmldoc">
+<p>Provide useful conversion functions.</p>
+
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+    <h4>Functions and values</h4>
+    <table class="table table-bordered member-list">
+        <thead>
+        <tr>
+            <td>Function or value</td><td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
+                        stringToDateTimeOffset(...)
+                    </code>
+                    <div class="tip" id="1">
+                        <strong>Signature:</strong> parse:(string -&gt; bool * (type)) -&gt; propName:string -&gt; value:string -&gt; ParserResult&lt;(type)&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Shared/Convert.fs#L16-16">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Convert from string to DateTimeOffset using <code>parse</code> to convert.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+                        stringToDateTimeOffsetISO8601
+                    </code>
+                    <div class="tip" id="2">
+                        <strong>Signature:</strong> Transformer&lt;string,(type)&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Shared/Convert.fs#L29-29">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Convert from string to DateTimeOffset, the date is formatted as ISO8601.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+                        stringToDecimal propName value
+                    </code>
+                    <div class="tip" id="3">
+                        <strong>Signature:</strong> propName:string -&gt; value:string -&gt; ParserResult&lt;decimal&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Shared/Convert.fs#L7-7">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Convert from string to decimal.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
+                        stringToGuid propName value
+                    </code>
+                    <div class="tip" id="4">
+                        <strong>Signature:</strong> propName:string -&gt; value:string -&gt; ParserResult&lt;(type)&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Shared/Convert.fs#L33-33">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Convert from a string to a Guid</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
+                        withFunction func arg2 value
+                    </code>
+                    <div class="tip" id="5">
+                        <strong>Signature:</strong> func:(&#39;T -&gt; &#39;R) -&gt; string -&gt; value:&#39;T -&gt; ParserResult&lt;&#39;R&gt;<br/>
+                                                    <strong>Type parameters:</strong>
+'T, 'R                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Shared/Convert.fs#L42-42">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Convert <code>value</code> using <code>func</code>.</p>
+
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    </div>
+</main>
+<footer>
+
+</footer>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/tips.js"></script>
+
+</body>
+</html>

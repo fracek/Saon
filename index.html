@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Saon: catchy description here
+</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a href="/index.html" class="navbar-brand">Saon</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/index.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="tutorialDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutorials
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="tutorialDropdownLink">
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/giraffe-tutorial.html">Using with Giraffe</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/json-tutorial.html">Parsing json data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/query-tutorial.html">Parsing query strings</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/validate-tutorial.html">Validating data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/convert-tutorial.html">Converting data</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/reference/index.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="main-content">
+    <div class="container">
+        
+
+<div>
+	<h1><a name="Saon-catchy-description-here" class="anchor" href="#Saon-catchy-description-here">Saon: catchy description here</a></h1>
+<p>Saon is an F# library to parse and validate json payloads and query strings. It builds on top of the <code>System.Text.Json</code>
+and <code>Microsoft.AspNetCore.Http.Features</code> packages.</p>
+<p><strong>WARNING</strong>: despite the version number, Saon is still in the very early stages. I'm still experimenting with the
+API since I'm not satisfied how the json converters and validation functions are composed together.</p>
+<h3><a name="How-to-get-Saon" class="anchor" href="#How-to-get-Saon">How to get Saon</a></h3>
+<p>Saon is ready to <a href="https://www.nuget.org/packages/Saon/">download from Nuget</a>.
+At the moment, there are four package you can download:</p>
+<ul>
+<li>
+<code>Saon</code>: this is an umbrella package that includes all the other packages. If you're using Saon in an Asp.Net Core
+application, you should use this package
+</li>
+<li><code>Saon.Json</code>: this package contains the functions to parse json data</li>
+<li><code>Saon.Query</code>: this package contains the functions to parse query strings</li>
+<li><code>Saon.Shared</code>: this is the core package that defines the base types and functions</li>
+</ul>
+<h2><a name="Using-with-Giraffe" class="anchor" href="#Using-with-Giraffe">Using with Giraffe</a></h2>
+<p>Saon can be easily integrated with Giraffe to provide json and query strings parsing and validation. You can find
+more information in the <a href="giraffe-tutorial.html">tutorial</a>.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="id">webApp</span> <span class="o">=</span>
+    <span class="id">choose</span> <span class="pn">[</span>
+        <span class="id">POST</span> <span class="pn">&gt;</span><span class="o">=&gt;</span> <span class="id">route</span> <span class="s">&quot;/&quot;</span> <span class="pn">&gt;</span><span class="o">=&gt;</span> <span class="id">Helper</span><span class="pn">.</span><span class="id">bindJson</span> <span class="id">Dto</span><span class="pn">.</span><span class="id">parseContactDetails</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="id">Handler</span><span class="pn">.</span><span class="id">createContact</span>
+        <span class="id">GET</span> <span class="pn">&gt;</span><span class="o">=&gt;</span> <span class="id">route</span> <span class="s">&quot;/&quot;</span> <span class="pn">&gt;</span><span class="o">=&gt;</span> <span class="id">Helper</span><span class="pn">.</span><span class="id">bindQuery</span> <span class="id">Dto</span><span class="pn">.</span><span class="id">parseLookup</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="id">Handler</span><span class="pn">.</span><span class="id">lookupContact</span>
+    <span class="pn">]</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Parsing-json-payloads" class="anchor" href="#Parsing-json-payloads">Parsing json payloads</a></h2>
+<p>One of the goals of this library is to enable developers to parse <em>idiomatic</em> json payloads and convert them to
+strictly typed F# objects.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="rt">Email</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="uc">Email</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="rt">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="rt">ContactDetails</span> <span class="o">=</span>
+    <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="id">Name</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="rt">string</span>
+      <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="id">Email</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="rt">Email</span> <span class="pn">}</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="fn">parseEmail</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="m">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="id">isNotEmptyOrWhitespace</span>
+    <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="m">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="id">isEmail</span>
+    <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="uc">Email</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="id">parseContactDetails</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="k">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="id">property</span> <span class="s">&quot;name&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="id">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 36)" onmouseover="showTip(event, 'fs16', 36)" class="id">isNotEmptyOrWhitespace</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">email</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="id">property</span> <span class="s">&quot;email&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="id">parseEmail</span><span class="pn">)</span>
+    <span class="k">return</span> <span class="pn">{</span> <span class="id">Name</span> <span class="o">=</span> <span class="id">name</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs9', 42)" onmouseover="showTip(event, 'fs9', 42)" class="id">Email</span> <span class="o">=</span> <span class="id">email</span> <span class="pn">}</span>
+<span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>You can find more information about the json module in the <a href="json-tutorial.html">tutorial</a>.</p>
+<h2><a name="Parsing-query-strings" class="anchor" href="#Parsing-query-strings">Parsing query strings</a></h2>
+<p>Saon includes a module to parse query strings represented by the <code>IQueryStringCollection</code> interface.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="rt">LookupType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="uc">Name</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs25', 45)" onmouseover="showTip(event, 'fs25', 45)" class="uc">Email</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="fn">parseLookupType</span> <span onmouseout="hideTip(event, 'fs27', 47)" onmouseover="showTip(event, 'fs27', 47)" class="id">paramName</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="pn">|</span> <span class="s">&quot;name&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="id">success</span> <span onmouseout="hideTip(event, 'fs24', 50)" onmouseover="showTip(event, 'fs24', 50)" class="uc">Name</span>
+    <span class="pn">|</span> <span class="s">&quot;email&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 51)" onmouseover="showTip(event, 'fs28', 51)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="id">success</span> <span onmouseout="hideTip(event, 'fs25', 53)" onmouseover="showTip(event, 'fs25', 53)" class="uc">Email</span>
+    <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 54)" onmouseover="showTip(event, 'fs28', 54)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs30', 55)" onmouseover="showTip(event, 'fs30', 55)" class="id">validationFail</span> <span class="s">&quot;type&quot;</span> <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="id">paramName</span> <span class="s">&quot;must be one of &#39;name&#39;, &#39;email&#39;&quot;</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs31', 57)" onmouseover="showTip(event, 'fs31', 57)" class="rt">Lookup</span> <span class="o">=</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs32', 58)" onmouseover="showTip(event, 'fs32', 58)" class="uc">Name</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs10', 59)" onmouseover="showTip(event, 'fs10', 59)" class="rt">string</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs33', 60)" onmouseover="showTip(event, 'fs33', 60)" class="uc">Email</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs10', 61)" onmouseover="showTip(event, 'fs10', 61)" class="rt">string</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 62)" onmouseover="showTip(event, 'fs34', 62)" class="fn">parseLookup</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 63)" onmouseover="showTip(event, 'fs35', 63)" class="k">queryParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="id">lookupType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 65)" onmouseover="showTip(event, 'fs37', 65)" class="m">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs38', 66)" onmouseover="showTip(event, 'fs38', 66)" class="id">parameter</span> <span class="s">&quot;type&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs37', 67)" onmouseover="showTip(event, 'fs37', 67)" class="m">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs39', 68)" onmouseover="showTip(event, 'fs39', 68)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs26', 69)" onmouseover="showTip(event, 'fs26', 69)" class="fn">parseLookupType</span><span class="pn">)</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs36', 70)" onmouseover="showTip(event, 'fs36', 70)" class="id">lookupType</span> <span class="k">with</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs23', 71)" onmouseover="showTip(event, 'fs23', 71)" class="id">LookupType</span><span class="pn">.</span><span class="id">LookupName</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="id">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs38', 73)" onmouseover="showTip(event, 'fs38', 73)" class="id">parameter</span> <span class="s">&quot;value&quot;</span> <span onmouseout="hideTip(event, 'fs37', 74)" onmouseover="showTip(event, 'fs37', 74)" class="id">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs39', 75)" onmouseover="showTip(event, 'fs39', 75)" class="id">string</span>
+        <span class="k">return</span> <span class="id">LookupName</span> <span class="id">value</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs23', 76)" onmouseover="showTip(event, 'fs23', 76)" class="id">LookupType</span><span class="pn">.</span><span class="id">LookupEmail</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 77)" onmouseover="showTip(event, 'fs37', 77)" class="id">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs38', 78)" onmouseover="showTip(event, 'fs38', 78)" class="id">parameter</span> <span class="s">&quot;value&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs37', 79)" onmouseover="showTip(event, 'fs37', 79)" class="id">Query</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs39', 80)" onmouseover="showTip(event, 'fs39', 80)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs15', 81)" onmouseover="showTip(event, 'fs15', 81)" class="id">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs17', 82)" onmouseover="showTip(event, 'fs17', 82)" class="id">isEmail</span><span class="pn">)</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs33', 83)" onmouseover="showTip(event, 'fs33', 83)" class="id">Email</span> <span class="id">value</span> <span class="o">|&gt;</span> <span class="id">LookupEmail</span>
+<span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>You can find more information about the query module in the <a href="query-tutorial.html">tutorial</a>.</p>
+<h2><a name="Validation-and-conversion" class="anchor" href="#Validation-and-conversion">Validation and conversion</a></h2>
+<p>Saon includes a range of validation and conversion functions. You can use them as building block to build your
+very own parsers!</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 84)" onmouseover="showTip(event, 'fs40', 84)" class="fn">parsePositiveAmount</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 85)" onmouseover="showTip(event, 'fs18', 85)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 86)" onmouseover="showTip(event, 'fs41', 86)" class="id">stringToDecimal</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs15', 87)" onmouseover="showTip(event, 'fs15', 87)" class="m">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs42', 88)" onmouseover="showTip(event, 'fs42', 88)" class="id">isGreaterThan</span> <span class="n">0m</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 89)" onmouseover="showTip(event, 'fs43', 89)" class="fn">parseSize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs40', 90)" onmouseover="showTip(event, 'fs40', 90)" class="fn">parsePositiveAmount</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs19', 92)" onmouseover="showTip(event, 'fs19', 92)" class="id">withFunction</span> <span class="id">Size</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 93)" onmouseover="showTip(event, 'fs44', 93)" class="fn">parsePrice</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs40', 94)" onmouseover="showTip(event, 'fs40', 94)" class="fn">parsePositiveAmount</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs18', 95)" onmouseover="showTip(event, 'fs18', 95)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs19', 96)" onmouseover="showTip(event, 'fs19', 96)" class="id">withFunction</span> <span class="id">Price</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Contributing-and-License" class="anchor" href="#Contributing-and-License">Contributing and License</a></h2>
+<p>This library is published under the Apache-2.0 license. You can find a copy of the
+<a href="https://github.com/fracek/Saon">license in the repository</a>.</p>
+<p>The project is <a href="https://github.com/fracek/Saon">hosted on GitHub</a>, where you can <a href="https://github.com/fracek/Saon/issues">report issues</a>
+and <a href="https://github.com/fracek/Saon/pulls">open pull requests</a>.</p>
+
+	<div class="tip" id="fs1">namespace Saon</div>
+<div class="tip" id="fs2">namespace Saon.Json</div>
+<div class="tip" id="fs3">module Operators<br /><br />from Saon</div>
+<div class="tip" id="fs4">namespace Saon.Query</div>
+<div class="tip" id="fs5">namespace System</div>
+<div class="tip" id="fs6">namespace System.Text</div>
+<div class="tip" id="fs7">val webApp : obj</div>
+<div class="tip" id="fs8">type Handler&lt;&#39;T&gt; =<br />&#160;&#160;delegate of obj * &#39;T -&gt; unit</div>
+<div class="tip" id="fs9">Multiple items<br />union case Email.Email: string -&gt; Email<br /><br />--------------------<br />type Email = | Email of string</div>
+<div class="tip" id="fs10">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />--------------------<br />type string = System.String</div>
+<div class="tip" id="fs11">type ContactDetails =<br />&#160;&#160;{Name: string;<br />&#160;&#160;&#160;Email: Email;}</div>
+<div class="tip" id="fs12">ContactDetails.Name: string</div>
+<div class="tip" id="fs13">Multiple items<br />ContactDetails.Email: Email<br /><br />--------------------<br />type Email = | Email of string</div>
+<div class="tip" id="fs14">val parseEmail : (string -&gt; string -&gt; ParserResult&lt;Email&gt;)</div>
+<div class="tip" id="fs15">module Validate<br /><br />from Saon</div>
+<div class="tip" id="fs16">val isNotEmptyOrWhitespace : propName:string -&gt; value:string -&gt; ParserResult&lt;string&gt;</div>
+<div class="tip" id="fs17">val isEmail : propName:string -&gt; value:string -&gt; ParserResult&lt;string&gt;</div>
+<div class="tip" id="fs18">module Convert<br /><br />from Saon</div>
+<div class="tip" id="fs19">val withFunction : func:(&#39;T -&gt; &#39;R) -&gt; string -&gt; value:&#39;T -&gt; ParserResult&lt;&#39;R&gt;</div>
+<div class="tip" id="fs20">val parseContactDetails : obj</div>
+<div class="tip" id="fs21"></div>
+<div class="tip" id="fs22">Multiple items<br />module Json<br /><br />from Saon.Json<br /><br />--------------------<br />namespace Saon.Json</div>
+<div class="tip" id="fs23">type LookupType =<br />&#160;&#160;| Name<br />&#160;&#160;| Email</div>
+<div class="tip" id="fs24">union case LookupType.Name: LookupType</div>
+<div class="tip" id="fs25">Multiple items<br />union case LookupType.Email: LookupType<br /><br />--------------------<br />type Email = | Email of string</div>
+<div class="tip" id="fs26">val parseLookupType : paramName:string -&gt; _arg1:string -&gt; ParserResult&lt;LookupType&gt;</div>
+<div class="tip" id="fs27">val paramName : string</div>
+<div class="tip" id="fs28">Multiple items<br />module ParserResult<br /><br />from Saon<br /><br />--------------------<br />type ParserResult&lt;&#39;T&gt; =<br />&#160;&#160;| ParsingFailed of field: string option * message: string<br />&#160;&#160;| ValidationFailed of ValidationFailedMap<br />&#160;&#160;| Success of &#39;T</div>
+<div class="tip" id="fs29">val success : value:&#39;a -&gt; ParserResult&lt;&#39;a&gt;</div>
+<div class="tip" id="fs30">val validationFail : typ:string -&gt; propName:string -&gt; msg:string -&gt; ParserResult&lt;&#39;a&gt;</div>
+<div class="tip" id="fs31">type Lookup =<br />&#160;&#160;| Name of string<br />&#160;&#160;| Email of string</div>
+<div class="tip" id="fs32">union case Lookup.Name: string -&gt; Lookup</div>
+<div class="tip" id="fs33">Multiple items<br />union case Lookup.Email: string -&gt; Lookup<br /><br />--------------------<br />type Email = | Email of string</div>
+<div class="tip" id="fs34">val parseLookup : (AspNetCore.Http.IQueryCollection -&gt; ParserResult&lt;obj&gt;)</div>
+<div class="tip" id="fs35">val queryParser : ParserBuilder&lt;AspNetCore.Http.IQueryCollection&gt;</div>
+<div class="tip" id="fs36">val lookupType : LookupType</div>
+<div class="tip" id="fs37">Multiple items<br />module Query<br /><br />from Saon.Query<br /><br />--------------------<br />namespace Saon.Query</div>
+<div class="tip" id="fs38">val parameter : paramName:string -&gt; func:Transformer&lt;Extensions.Primitives.StringValues,&#39;T&gt; -&gt; query:AspNetCore.Http.IQueryCollection -&gt; ParserResult&lt;&#39;T&gt; * AspNetCore.Http.IQueryCollection</div>
+<div class="tip" id="fs39">val string : propName:string -&gt; value:Extensions.Primitives.StringValues -&gt; ParserResult&lt;string&gt;</div>
+<div class="tip" id="fs40">val parsePositiveAmount : (string -&gt; string -&gt; ParserResult&lt;decimal&gt;)</div>
+<div class="tip" id="fs41">val stringToDecimal : propName:string -&gt; value:string -&gt; ParserResult&lt;decimal&gt;</div>
+<div class="tip" id="fs42">val isGreaterThan : minValue:&#39;T -&gt; propName:string -&gt; value:&#39;T -&gt; ParserResult&lt;&#39;T&gt; (requires comparison)</div>
+<div class="tip" id="fs43">val parseSize : (string -&gt; string -&gt; ParserResult&lt;obj&gt;)</div>
+<div class="tip" id="fs44">val parsePrice : (string -&gt; string -&gt; ParserResult&lt;obj&gt;)</div>
+
+</div>
+    </div>
+</main>
+<footer>
+
+</footer>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/tips.js"></script>
+
+</body>
+</html>

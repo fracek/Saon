@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Json - Saon</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a href="/index.html" class="navbar-brand">Saon</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/index.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="tutorialDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutorials
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="tutorialDropdownLink">
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/giraffe-tutorial.html">Using with Giraffe</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/json-tutorial.html">Parsing json data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/query-tutorial.html">Parsing query strings</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/validate-tutorial.html">Validating data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/convert-tutorial.html">Converting data</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/reference/index.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="main-content">
+    <div class="container">
+        
+
+
+
+<h1>Json</h1>
+<p>
+  <span>Namespace: Saon.Json</span><br />
+        <span>
+          Attributes:<br />
+[&lt;RequireQualifiedAccess&gt;]<br />
+
+      </span>
+</p>
+<div class="xmldoc">
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+    <h4>Functions and values</h4>
+    <table class="table table-bordered member-list">
+        <thead>
+        <tr>
+            <td>Function or value</td><td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+                        Json.bool propName element
+                    </code>
+                    <div class="tip" id="36">
+                        <strong>Signature:</strong> propName:string -&gt; element:(type) -&gt; ParserResult&lt;bool&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L64-64">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Get the <code>element</code> bool value.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
+                        Json.createDocumentParser(parser)
+                    </code>
+                    <div class="tip" id="37">
+                        <strong>Signature:</strong> parser:((type) -&gt; ParserResult&lt;&#39;T&gt;) -&gt; (type) -&gt; ParserResult&lt;&#39;T&gt;<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L20-20">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Create a parser to parse <code>JsonDocument</code>s.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
+                        Json.embeddedObject inner element
+                    </code>
+                    <div class="tip" id="38">
+                        <strong>Signature:</strong> inner:((type) -&gt; ParserResult&lt;&#39;T&gt;) -&gt; element:(type) -&gt; ParserResult&lt;&#39;T&gt; * (type)<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L52-52">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Parse part of the current <code>element</code> as a JSON object using the <code>inner</code> parser.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
+                        Json.int64 propName element
+                    </code>
+                    <div class="tip" id="39">
+                        <strong>Signature:</strong> propName:string -&gt; element:(type) -&gt; ParserResult&lt;int64&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L60-60">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Get the <code>element</code> int64 value.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+                        Json.list inner propName element
+                    </code>
+                    <div class="tip" id="40">
+                        <strong>Signature:</strong> inner:Transformer&lt;(type),&#39;T&gt; -&gt; propName:string -&gt; element:(type) -&gt; ParserResult&lt;&#39;T list&gt;<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L88-88">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Apply the <code>inner</code> parser to each children of the json array <code>element</code>.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
+                        Json.object inner propName element
+                    </code>
+                    <div class="tip" id="41">
+                        <strong>Signature:</strong> inner:((type) -&gt; ParserResult&lt;&#39;T&gt;) -&gt; propName:string -&gt; element:(type) -&gt; ParserResult&lt;&#39;T&gt;<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L68-68">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Parse the <code>element</code> as a JSON object using the <code>inner</code> parser.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
+                        Json.oneOf matchers element
+                    </code>
+                    <div class="tip" id="42">
+                        <strong>Signature:</strong> matchers:(string * Transformer&lt;(type),&#39;T&gt;) list -&gt; element:(type) -&gt; ParserResult&lt;&#39;T&gt; * (type)<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L130-130">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Matches the first of properties it finds, applying the transformer to it.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '43', 43)" onmouseover="showTip(event, '43', 43)">
+                        Json.onlyOneOf matchers element
+                    </code>
+                    <div class="tip" id="43">
+                        <strong>Signature:</strong> matchers:(string * Transformer&lt;(type),&#39;T&gt;) list -&gt; element:(type) -&gt; ParserResult&lt;&#39;T&gt; * (type)<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L145-145">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Matches only one of the properties, applying the transformer to it.
+Returns a <a href="saon-validationerror.html" title="ValidationError"><code>ValidationError</code></a> if more than one property matches.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '44', 44)" onmouseover="showTip(event, '44', 44)">
+                        Json.optionalProperty(...)
+                    </code>
+                    <div class="tip" id="44">
+                        <strong>Signature:</strong> propName:string -&gt; func:Transformer&lt;(type),&#39;T&gt; -&gt; element:(type) -&gt; ParserResult&lt;&#39;T option&gt; * (type)<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L43-43">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Apply the transformation <code>func</code> to the <code>element</code> optional property <code>propName</code>.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '45', 45)" onmouseover="showTip(event, '45', 45)">
+                        Json.property propName func element
+                    </code>
+                    <div class="tip" id="45">
+                        <strong>Signature:</strong> propName:string -&gt; func:Transformer&lt;(type),&#39;T&gt; -&gt; element:(type) -&gt; ParserResult&lt;&#39;T&gt; * (type)<br/>
+                                                    <strong>Type parameters:</strong>
+'T                                            </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L33-33">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Apply the transformation <code>func</code> to the <code>element</code> property <code>propName</code>.</p>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="member-name">
+
+                    <code onmouseout="hideTip(event, '46', 46)" onmouseover="showTip(event, '46', 46)">
+                        Json.string propName element
+                    </code>
+                    <div class="tip" id="46">
+                        <strong>Signature:</strong> propName:string -&gt; element:(type) -&gt; ParserResult&lt;string&gt;<br/>
+                                                                    </div>
+                </td>
+                <td class="xmldoc">
+                                            <p class="github-link">
+                            <a href="https://github.com/fracek/saon/blob/master/src/Saon.Json/Parser.fs#L56-56">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </p>
+                    <p>Get the <code>element</code> string value.</p>
+
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    </div>
+</main>
+<footer>
+
+</footer>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/tips.js"></script>
+
+</body>
+</html>

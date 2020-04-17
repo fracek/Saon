@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Parsing json data
+</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a href="/index.html" class="navbar-brand">Saon</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/index.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="tutorialDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutorials
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="tutorialDropdownLink">
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/giraffe-tutorial.html">Using with Giraffe</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/json-tutorial.html">Parsing json data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/query-tutorial.html">Parsing query strings</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/validate-tutorial.html">Validating data</a>
+                        <a class="dropdown-item" href="https://fracek.github.io/saon/convert-tutorial.html">Converting data</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://fracek.github.io/saon/reference/index.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="main-content">
+    <div class="container">
+        
+
+<div>
+	<h1><a name="Tutorial-Parsing-json-data" class="anchor" href="#Tutorial-Parsing-json-data">Tutorial: Parsing json data</a></h1>
+<p>In this tutorial we show how to parse and validate json data.
+We will consider an example HTTP endpoint to create orders on a fictional exchange.</p>
+<p>The exchange accepts market and limit orders. Both order types have the following properties:</p>
+<ul>
+<li><strong>client_id</strong>: an optional id assigned by the client</li>
+<li><strong>type</strong>: <code>market</code> or <code>limit</code>. Defaults to <code>limit</code></li>
+<li><strong>side</strong>: <code>buy</code> or <code>sell</code></li>
+<li><strong>size</strong>: the order size. To avoid floating point errors, this value is sent as a string</li>
+<li><strong>product</strong>: the product being sold or bought</li>
+</ul>
+<p>Limit orders expand market orders to include the following properties:</p>
+<ul>
+<li><strong>price</strong>: the limit price</li>
+<li><strong>time_in_force</strong>: optional, can be <code>gtc</code> or <code>fok</code>. Defaults to <code>gtc</code></li>
+</ul>
+<p>A json payload for a market order looks like the following:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="js">{
+  <span class="s">"type"</span>: <span class="s">"market"</span>,
+  <span class="s">"client_id"</span>: <span class="s">"my-id"</span>,
+  <span class="s">"side"</span>: <span class="s">"buy"</span>,
+  <span class="s">"size"</span>: <span class="s">"120.0"</span>,
+  <span class="s">"product"</span>: <span class="s">"GBP-EUR"</span>
+}
+</code></pre></td></tr></table>
+<p>While one for a limit order looks like:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="js">{
+  <span class="s">"client_id"</span>: <span class="s">"my-id"</span>,
+  <span class="s">"side"</span>: <span class="s">"buy"</span>,
+  <span class="s">"size"</span>: <span class="s">"120.0"</span>,
+  <span class="s">"price"</span>: <span class="s">"1.15"</span>,
+  <span class="s">"product"</span>: <span class="s">"GBP-EUR"</span>
+}
+</code></pre></td></tr></table>
+<h2><a name="Initialisation" class="anchor" href="#Initialisation">Initialisation</a></h2>
+<p>For this tutorial, we will be using the <code>System.Text.Json</code> package to parse json documents, and <code>Saon</code> and <code>Saon.Json</code>
+to parse and validate the data.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#I</span> <span class="s">&quot;../../src/Saon/bin/Release/netstandard2.0/&quot;</span>
+<span class="pp">#r</span> <span class="s">&quot;Saon.Shared.dll&quot;</span>
+<span class="pp">#r</span> <span class="s">&quot;Saon.Json.dll&quot;</span>
+<span class="pp">#r</span> <span class="s">&quot;Saon.Query.dll&quot;</span>
+<span class="pp">#r</span> <span class="s">&quot;Saon.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">Saon</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="id">Saon</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="id">Json</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="id">Saon</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="id">Operators</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="id">Saon</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="id">Query</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="id">Text</span><span class="pn">.</span><span class="id">Json</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Domain-Types" class="anchor" href="#Domain-Types">Domain Types</a></h2>
+<p>We start by modeling the domain. We try to avoid using types such as <code>string</code> or <code>decimal</code> for our fields to enforce
+stricter type checking by the compiler.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="rt">OrderId</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="uc">OrderId</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="rt">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="rt">Side</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="uc">Buy</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="uc">Sell</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="rt">ProductId</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="uc">ProductId</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="rt">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="rt">Size</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="uc">Size</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="vt">decimal</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="rt">Price</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="uc">Price</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="vt">decimal</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="rt">TimeInForce</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="uc">GTC</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="uc">FOK</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="rt">LimitOrder</span> <span class="o">=</span>
+    <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="id">ClientOrderId</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="rt">OrderId</span> <span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="rt">option</span>
+      <span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="id">Side</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="rt">Side</span>
+      <span onmouseout="hideTip(event, 'fs23', 34)" onmouseover="showTip(event, 'fs23', 34)" class="id">ProductId</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="rt">ProductId</span>
+      <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="id">Size</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="rt">Size</span>
+      <span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="id">Price</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="rt">Price</span>
+      <span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="id">TimeInForce</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs16', 41)" onmouseover="showTip(event, 'fs16', 41)" class="rt">TimeInForce</span> <span class="pn">}</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="rt">MarketOrder</span> <span class="o">=</span>
+    <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="id">ClientOrderId</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="rt">OrderId</span> <span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="rt">option</span>
+      <span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="id">Side</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs29', 47)" onmouseover="showTip(event, 'fs29', 47)" class="rt">Side</span>
+      <span onmouseout="hideTip(event, 'fs30', 48)" onmouseover="showTip(event, 'fs30', 48)" class="id">ProductId</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs30', 49)" onmouseover="showTip(event, 'fs30', 49)" class="rt">ProductId</span>
+      <span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="id">Size</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs31', 51)" onmouseover="showTip(event, 'fs31', 51)" class="rt">Size</span> <span class="pn">}</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs32', 52)" onmouseover="showTip(event, 'fs32', 52)" class="rt">OrderType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 53)" onmouseover="showTip(event, 'fs33', 53)" class="uc">Limit</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs34', 54)" onmouseover="showTip(event, 'fs34', 54)" class="uc">Market</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs35', 55)" onmouseover="showTip(event, 'fs35', 55)" class="rt">Order</span> <span class="o">=</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs36', 56)" onmouseover="showTip(event, 'fs36', 56)" class="uc">Market</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs27', 57)" onmouseover="showTip(event, 'fs27', 57)" class="rt">MarketOrder</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs37', 58)" onmouseover="showTip(event, 'fs37', 58)" class="uc">Limit</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs19', 59)" onmouseover="showTip(event, 'fs19', 59)" class="rt">LimitOrder</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Validation-and-Type-Conversion" class="anchor" href="#Validation-and-Type-Conversion">Validation and Type Conversion</a></h2>
+<p>We define several utility functions to convert from json types (such as strings and numbers) to F# sharp types.</p>
+<p>A conversion function from value of type <code>'T</code> to value of type <code>'R</code> has a signature
+like <code>string -&gt; 'T -&gt; ParserResult&lt;'R&gt;</code>, where the first parameter is the property name and the second is the
+value being converted. The function returns <code>ParserResult.Success</code> if the conversion was successful, otherwise it
+returns <code>ParserResult.ValidationFailed</code> with more information about the error.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 60)" onmouseover="showTip(event, 'fs38', 60)" class="fn">parseOrderType</span> <span onmouseout="hideTip(event, 'fs39', 61)" onmouseover="showTip(event, 'fs39', 61)" class="id">propName</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="pn">|</span> <span class="s">&quot;limit&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 62)" onmouseover="showTip(event, 'fs40', 62)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 63)" onmouseover="showTip(event, 'fs41', 63)" class="id">success</span> <span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="rt">OrderType</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs33', 65)" onmouseover="showTip(event, 'fs33', 65)" class="id">Limit</span>
+    <span class="pn">|</span> <span class="s">&quot;market&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 66)" onmouseover="showTip(event, 'fs40', 66)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 67)" onmouseover="showTip(event, 'fs41', 67)" class="id">success</span> <span onmouseout="hideTip(event, 'fs32', 68)" onmouseover="showTip(event, 'fs32', 68)" class="rt">OrderType</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs34', 69)" onmouseover="showTip(event, 'fs34', 69)" class="id">Market</span>
+    <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 70)" onmouseover="showTip(event, 'fs40', 70)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs42', 71)" onmouseover="showTip(event, 'fs42', 71)" class="id">validationFail</span> <span class="s">&quot;orderType&quot;</span> <span onmouseout="hideTip(event, 'fs39', 72)" onmouseover="showTip(event, 'fs39', 72)" class="id">propName</span> <span class="s">&quot;must be &#39;limit&#39; or &#39;market&#39;&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 73)" onmouseover="showTip(event, 'fs43', 73)" class="fn">parseSide</span> <span onmouseout="hideTip(event, 'fs39', 74)" onmouseover="showTip(event, 'fs39', 74)" class="id">propName</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="pn">|</span> <span class="s">&quot;buy&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 75)" onmouseover="showTip(event, 'fs40', 75)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 76)" onmouseover="showTip(event, 'fs41', 76)" class="id">success</span> <span onmouseout="hideTip(event, 'fs10', 77)" onmouseover="showTip(event, 'fs10', 77)" class="uc">Buy</span>
+    <span class="pn">|</span> <span class="s">&quot;sell&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 78)" onmouseover="showTip(event, 'fs40', 78)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 79)" onmouseover="showTip(event, 'fs41', 79)" class="id">success</span> <span onmouseout="hideTip(event, 'fs11', 80)" onmouseover="showTip(event, 'fs11', 80)" class="uc">Sell</span>
+    <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs42', 82)" onmouseover="showTip(event, 'fs42', 82)" class="id">validationFail</span> <span class="s">&quot;side&quot;</span> <span onmouseout="hideTip(event, 'fs39', 83)" onmouseover="showTip(event, 'fs39', 83)" class="id">propName</span> <span class="s">&quot;must be &#39;buy&#39; or &#39;sell&#39;&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 84)" onmouseover="showTip(event, 'fs44', 84)" class="fn">parseTimeInForce</span> <span onmouseout="hideTip(event, 'fs39', 85)" onmouseover="showTip(event, 'fs39', 85)" class="id">propName</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="pn">|</span> <span class="s">&quot;gtc&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 86)" onmouseover="showTip(event, 'fs40', 86)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 87)" onmouseover="showTip(event, 'fs41', 87)" class="id">success</span> <span onmouseout="hideTip(event, 'fs17', 88)" onmouseover="showTip(event, 'fs17', 88)" class="uc">GTC</span>
+    <span class="pn">|</span> <span class="s">&quot;fok&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 89)" onmouseover="showTip(event, 'fs40', 89)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 90)" onmouseover="showTip(event, 'fs41', 90)" class="id">success</span> <span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="uc">FOK</span>
+    <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 92)" onmouseover="showTip(event, 'fs40', 92)" class="m">ParserResult</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs42', 93)" onmouseover="showTip(event, 'fs42', 93)" class="id">validationFail</span> <span class="s">&quot;timeInForce&quot;</span> <span onmouseout="hideTip(event, 'fs39', 94)" onmouseover="showTip(event, 'fs39', 94)" class="id">propName</span> <span class="s">&quot;must be &#39;gtc&#39; or &#39;fok&#39;&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs45', 95)" onmouseover="showTip(event, 'fs45', 95)" class="fn">parsePositiveAmount</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs46', 96)" onmouseover="showTip(event, 'fs46', 96)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs47', 97)" onmouseover="showTip(event, 'fs47', 97)" class="id">stringToDecimal</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs48', 98)" onmouseover="showTip(event, 'fs48', 98)" class="m">Validate</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs49', 99)" onmouseover="showTip(event, 'fs49', 99)" class="id">isGreaterThan</span> <span class="n">0m</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 100)" onmouseover="showTip(event, 'fs50', 100)" class="fn">parseSize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 101)" onmouseover="showTip(event, 'fs45', 101)" class="fn">parsePositiveAmount</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 102)" onmouseover="showTip(event, 'fs46', 102)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 103)" onmouseover="showTip(event, 'fs51', 103)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs13', 104)" onmouseover="showTip(event, 'fs13', 104)" class="uc">Size</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 105)" onmouseover="showTip(event, 'fs52', 105)" class="fn">parsePrice</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 106)" onmouseover="showTip(event, 'fs45', 106)" class="fn">parsePositiveAmount</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 107)" onmouseover="showTip(event, 'fs46', 107)" class="m">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 108)" onmouseover="showTip(event, 'fs51', 108)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs15', 109)" onmouseover="showTip(event, 'fs15', 109)" class="uc">Price</span>
+</code></pre></td>
+</tr>
+</table>
+<p>To build json objects parsers, we can use the <code>jsonObjectParser</code> computational expression.</p>
+<p>We use the <code>Json.property</code> and <code>Json.optionalProperty</code> functions to get and parse required and optional properties
+of our json object. The first parameter is the name of the property, while the second parameter is a function
+that converts from <code>JsonElement</code> to our type.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 110)" onmouseover="showTip(event, 'fs53', 110)" class="id">parseLimitOrder</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 111)" onmouseover="showTip(event, 'fs54', 111)" class="k">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">clientId</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 112)" onmouseover="showTip(event, 'fs55', 112)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 113)" onmouseover="showTip(event, 'fs54', 113)" class="id">optionalProperty</span> <span class="s">&quot;client_id&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 114)" onmouseover="showTip(event, 'fs55', 114)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 115)" onmouseover="showTip(event, 'fs54', 115)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 116)" onmouseover="showTip(event, 'fs46', 116)" class="id">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 117)" onmouseover="showTip(event, 'fs51', 117)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs7', 118)" onmouseover="showTip(event, 'fs7', 118)" class="id">OrderId</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">product</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 119)" onmouseover="showTip(event, 'fs55', 119)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 120)" onmouseover="showTip(event, 'fs54', 120)" class="id">property</span> <span class="s">&quot;product&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 121)" onmouseover="showTip(event, 'fs55', 121)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 122)" onmouseover="showTip(event, 'fs54', 122)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 123)" onmouseover="showTip(event, 'fs46', 123)" class="id">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 124)" onmouseover="showTip(event, 'fs51', 124)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs12', 125)" onmouseover="showTip(event, 'fs12', 125)" class="id">ProductId</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">side</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 126)" onmouseover="showTip(event, 'fs55', 126)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 127)" onmouseover="showTip(event, 'fs54', 127)" class="id">property</span> <span class="s">&quot;side&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 128)" onmouseover="showTip(event, 'fs55', 128)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 129)" onmouseover="showTip(event, 'fs54', 129)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs43', 130)" onmouseover="showTip(event, 'fs43', 130)" class="id">parseSide</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">size</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 131)" onmouseover="showTip(event, 'fs55', 131)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 132)" onmouseover="showTip(event, 'fs54', 132)" class="id">property</span> <span class="s">&quot;size&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 133)" onmouseover="showTip(event, 'fs55', 133)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 134)" onmouseover="showTip(event, 'fs54', 134)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs50', 135)" onmouseover="showTip(event, 'fs50', 135)" class="id">parseSize</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">price</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 136)" onmouseover="showTip(event, 'fs55', 136)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 137)" onmouseover="showTip(event, 'fs54', 137)" class="id">property</span> <span class="s">&quot;price&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 138)" onmouseover="showTip(event, 'fs55', 138)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 139)" onmouseover="showTip(event, 'fs54', 139)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs52', 140)" onmouseover="showTip(event, 'fs52', 140)" class="id">parsePrice</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">tif</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 141)" onmouseover="showTip(event, 'fs55', 141)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 142)" onmouseover="showTip(event, 'fs54', 142)" class="id">optionalProperty</span> <span class="s">&quot;time_in_force&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 143)" onmouseover="showTip(event, 'fs55', 143)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 144)" onmouseover="showTip(event, 'fs54', 144)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs44', 145)" onmouseover="showTip(event, 'fs44', 145)" class="id">parseTimeInForce</span><span class="pn">)</span>
+    <span class="k">return</span>
+      <span class="pn">{</span> <span class="id">ClientOrderId</span> <span class="o">=</span> <span class="id">clientId</span>
+        <span onmouseout="hideTip(event, 'fs12', 146)" onmouseover="showTip(event, 'fs12', 146)" class="id">ProductId</span> <span class="o">=</span> <span class="id">product</span>
+        <span onmouseout="hideTip(event, 'fs9', 147)" onmouseover="showTip(event, 'fs9', 147)" class="id">Side</span> <span class="o">=</span> <span class="id">side</span>
+        <span onmouseout="hideTip(event, 'fs13', 148)" onmouseover="showTip(event, 'fs13', 148)" class="id">Size</span> <span class="o">=</span> <span class="id">size</span>
+        <span onmouseout="hideTip(event, 'fs15', 149)" onmouseover="showTip(event, 'fs15', 149)" class="id">Price</span> <span class="o">=</span> <span class="id">price</span>
+        <span onmouseout="hideTip(event, 'fs16', 150)" onmouseover="showTip(event, 'fs16', 150)" class="id">TimeInForce</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs56', 151)" onmouseover="showTip(event, 'fs56', 151)" class="id">Option</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs57', 152)" onmouseover="showTip(event, 'fs57', 152)" class="id">defaultValue</span> <span onmouseout="hideTip(event, 'fs17', 153)" onmouseover="showTip(event, 'fs17', 153)" class="id">GTC</span> <span class="id">tif</span> <span class="pn">}</span>
+<span class="pn">}</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs58', 154)" onmouseover="showTip(event, 'fs58', 154)" class="id">parseMarketOrder</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 155)" onmouseover="showTip(event, 'fs54', 155)" class="k">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">clientId</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 156)" onmouseover="showTip(event, 'fs55', 156)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 157)" onmouseover="showTip(event, 'fs54', 157)" class="id">optionalProperty</span> <span class="s">&quot;client_id&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 158)" onmouseover="showTip(event, 'fs55', 158)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 159)" onmouseover="showTip(event, 'fs54', 159)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 160)" onmouseover="showTip(event, 'fs46', 160)" class="id">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 161)" onmouseover="showTip(event, 'fs51', 161)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs7', 162)" onmouseover="showTip(event, 'fs7', 162)" class="id">OrderId</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">product</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 163)" onmouseover="showTip(event, 'fs55', 163)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 164)" onmouseover="showTip(event, 'fs54', 164)" class="id">property</span> <span class="s">&quot;product&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 165)" onmouseover="showTip(event, 'fs55', 165)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 166)" onmouseover="showTip(event, 'fs54', 166)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs46', 167)" onmouseover="showTip(event, 'fs46', 167)" class="id">Convert</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 168)" onmouseover="showTip(event, 'fs51', 168)" class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs12', 169)" onmouseover="showTip(event, 'fs12', 169)" class="id">ProductId</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">side</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 170)" onmouseover="showTip(event, 'fs55', 170)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 171)" onmouseover="showTip(event, 'fs54', 171)" class="id">property</span> <span class="s">&quot;side&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 172)" onmouseover="showTip(event, 'fs55', 172)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 173)" onmouseover="showTip(event, 'fs54', 173)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs43', 174)" onmouseover="showTip(event, 'fs43', 174)" class="id">parseSide</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">size</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 175)" onmouseover="showTip(event, 'fs55', 175)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 176)" onmouseover="showTip(event, 'fs54', 176)" class="id">property</span> <span class="s">&quot;size&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 177)" onmouseover="showTip(event, 'fs55', 177)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 178)" onmouseover="showTip(event, 'fs54', 178)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs50', 179)" onmouseover="showTip(event, 'fs50', 179)" class="id">parseSize</span><span class="pn">)</span>
+    <span class="k">return</span>
+      <span class="pn">{</span> <span class="id">ClientOrderId</span> <span class="o">=</span> <span class="id">clientId</span>
+        <span onmouseout="hideTip(event, 'fs12', 180)" onmouseover="showTip(event, 'fs12', 180)" class="id">ProductId</span> <span class="o">=</span> <span class="id">product</span>
+        <span onmouseout="hideTip(event, 'fs9', 181)" onmouseover="showTip(event, 'fs9', 181)" class="id">Side</span> <span class="o">=</span> <span class="id">side</span>
+        <span onmouseout="hideTip(event, 'fs13', 182)" onmouseover="showTip(event, 'fs13', 182)" class="id">Size</span> <span class="o">=</span> <span class="id">size</span> <span class="pn">}</span>
+<span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Our payload includes the fields for market and limit orders in the root json object. Saon allows us to pass the
+current <code>JsonElement</code> to an object sub parser by using the <code>Json.embeddedObject</code> function.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 183)" onmouseover="showTip(event, 'fs59', 183)" class="fn">parseOrder</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 184)" onmouseover="showTip(event, 'fs54', 184)" class="k">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">orderType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 185)" onmouseover="showTip(event, 'fs55', 185)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 186)" onmouseover="showTip(event, 'fs54', 186)" class="id">optionalProperty</span> <span class="s">&quot;type&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs55', 187)" onmouseover="showTip(event, 'fs55', 187)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 188)" onmouseover="showTip(event, 'fs54', 188)" class="id">string</span> <span class="o">/&gt;</span> <span onmouseout="hideTip(event, 'fs38', 189)" onmouseover="showTip(event, 'fs38', 189)" class="id">parseOrderType</span><span class="pn">)</span>
+    <span class="k">match</span> <span class="id">orderType</span> <span class="k">with</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs60', 190)" onmouseover="showTip(event, 'fs60', 190)" class="id">Some</span> <span onmouseout="hideTip(event, 'fs32', 191)" onmouseover="showTip(event, 'fs32', 191)" class="id">OrderType</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs33', 192)" onmouseover="showTip(event, 'fs33', 192)" class="id">Limit</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs61', 193)" onmouseover="showTip(event, 'fs61', 193)" class="id">None</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">order</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 194)" onmouseover="showTip(event, 'fs55', 194)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 195)" onmouseover="showTip(event, 'fs54', 195)" class="id">embeddedObject</span> <span onmouseout="hideTip(event, 'fs53', 196)" onmouseover="showTip(event, 'fs53', 196)" class="id">parseLimitOrder</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs37', 197)" onmouseover="showTip(event, 'fs37', 197)" class="id">Limit</span> <span class="id">order</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs60', 198)" onmouseover="showTip(event, 'fs60', 198)" class="id">Some</span> <span onmouseout="hideTip(event, 'fs32', 199)" onmouseover="showTip(event, 'fs32', 199)" class="id">OrderType</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs34', 200)" onmouseover="showTip(event, 'fs34', 200)" class="id">Market</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">order</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs55', 201)" onmouseover="showTip(event, 'fs55', 201)" class="id">Json</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 202)" onmouseover="showTip(event, 'fs54', 202)" class="id">embeddedObject</span> <span onmouseout="hideTip(event, 'fs58', 203)" onmouseover="showTip(event, 'fs58', 203)" class="id">parseMarketOrder</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs36', 204)" onmouseover="showTip(event, 'fs36', 204)" class="id">Market</span> <span class="id">order</span>
+<span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Using-the-parser" class="anchor" href="#Using-the-parser">Using the parser</a></h2>
+<p>We are now ready to test the parser. We tart by defining the json payload and parsing it into a <code>JsonDocument</code> object,
+then we call <code>parseOrder</code> to parse it to obtain a <code>ParserResult&lt;Order&gt;</code>.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 205)" onmouseover="showTip(event, 'fs62', 205)" class="fn">parseOrderPayload</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs63', 206)" onmouseover="showTip(event, 'fs63', 206)" class="id">payload</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 207)" onmouseover="showTip(event, 'fs8', 207)" class="rt">string</span><span class="pn">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 208)" onmouseover="showTip(event, 'fs64', 208)" class="id">document</span> <span class="o">=</span> <span class="id">JsonDocument</span><span class="pn">.</span><span class="id">Parse</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs63', 209)" onmouseover="showTip(event, 'fs63', 209)" class="id">payload</span><span class="pn">)</span>
+    <span onmouseout="hideTip(event, 'fs59', 210)" onmouseover="showTip(event, 'fs59', 210)" class="fn">parseOrder</span> <span onmouseout="hideTip(event, 'fs64', 211)" onmouseover="showTip(event, 'fs64', 211)" class="id">document</span><span class="pn">.</span><span class="id">RootElement</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 212)" onmouseover="showTip(event, 'fs65', 212)" class="id">marketOrderPayload</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">{</span>
+<span class="s">  &quot;type&quot;: &quot;market&quot;,</span>
+<span class="s">  &quot;client_id&quot;: &quot;my-id&quot;,</span>
+<span class="s">  &quot;side&quot;: &quot;buy&quot;,</span>
+<span class="s">  &quot;size&quot;: &quot;120.0&quot;,</span>
+<span class="s">  &quot;price&quot;: &quot;1.15&quot;,</span>
+<span class="s">  &quot;product&quot;: &quot;GBP-EUR&quot;</span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 213)" onmouseover="showTip(event, 'fs66', 213)" class="id">marketOrder</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs62', 214)" onmouseover="showTip(event, 'fs62', 214)" class="fn">parseOrderPayload</span> <span onmouseout="hideTip(event, 'fs65', 215)" onmouseover="showTip(event, 'fs65', 215)" class="id">marketOrderPayload</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs67', 216)" onmouseover="showTip(event, 'fs67', 216)" class="id">limitOrderPayload</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">{</span>
+<span class="s">  &quot;client_id&quot;: &quot;my-id&quot;,</span>
+<span class="s">  &quot;side&quot;: &quot;buy&quot;,</span>
+<span class="s">  &quot;size&quot;: &quot;120.0&quot;,</span>
+<span class="s">  &quot;price&quot;: &quot;1.15&quot;,</span>
+<span class="s">  &quot;product&quot;: &quot;GBP-EUR&quot;</span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs68', 217)" onmouseover="showTip(event, 'fs68', 217)" class="id">limitOrder</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs62', 218)" onmouseover="showTip(event, 'fs62', 218)" class="fn">parseOrderPayload</span> <span onmouseout="hideTip(event, 'fs67', 219)" onmouseover="showTip(event, 'fs67', 219)" class="id">limitOrderPayload</span>
+</code></pre></td>
+</tr>
+</table>
+<p>If the json payload is malformed, the parser will return a <code>ValidationFailed</code> result with more information about the error.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs69', 220)" onmouseover="showTip(event, 'fs69', 220)" class="id">badOrderTypePayload</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">{</span>
+<span class="s">  &quot;type&quot;: &quot;invalid&quot;,</span>
+<span class="s">  &quot;client_id&quot;: &quot;my-id&quot;,</span>
+<span class="s">  &quot;side&quot;: &quot;buy&quot;,</span>
+<span class="s">  &quot;size&quot;: &quot;120.0&quot;,</span>
+<span class="s">  &quot;price&quot;: &quot;1.15&quot;,</span>
+<span class="s">  &quot;product&quot;: &quot;GBP-EUR&quot;</span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span onmouseout="hideTip(event, 'fs62', 221)" onmouseover="showTip(event, 'fs62', 221)" class="fn">parseOrderPayload</span> <span onmouseout="hideTip(event, 'fs69', 222)" onmouseover="showTip(event, 'fs69', 222)" class="id">badOrderTypePayload</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs70', 223)" onmouseover="showTip(event, 'fs70', 223)" class="id">sizeIsNotANumber</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">{</span>
+<span class="s">  &quot;type&quot;: &quot;limit&quot;,</span>
+<span class="s">  &quot;client_id&quot;: &quot;my-id&quot;,</span>
+<span class="s">  &quot;side&quot;: &quot;buy&quot;,</span>
+<span class="s">  &quot;size&quot;: &quot;12O&quot;,</span>
+<span class="s">  &quot;price&quot;: &quot;1.15&quot;,</span>
+<span class="s">  &quot;product&quot;: &quot;GBP-EUR&quot;</span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span onmouseout="hideTip(event, 'fs62', 224)" onmouseover="showTip(event, 'fs62', 224)" class="fn">parseOrderPayload</span> <span onmouseout="hideTip(event, 'fs70', 225)" onmouseover="showTip(event, 'fs70', 225)" class="id">sizeIsNotANumber</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="More-about-the-json-module" class="anchor" href="#More-about-the-json-module">More about the json module</a></h2>
+<p>You can find more information about the Json module in the <a href="reference/saon-json-json.html">API reference</a> section.</p>
+
+	<div class="tip" id="fs1">namespace Saon</div>
+<div class="tip" id="fs2">namespace Saon.Json</div>
+<div class="tip" id="fs3">module Operators<br /><br />from Saon</div>
+<div class="tip" id="fs4">namespace Saon.Query</div>
+<div class="tip" id="fs5">namespace System</div>
+<div class="tip" id="fs6">namespace System.Text</div>
+<div class="tip" id="fs7">Multiple items<br />union case OrderId.OrderId: string -&gt; OrderId<br /><br />--------------------<br />type OrderId = | OrderId of string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />--------------------<br />type string = System.String</div>
+<div class="tip" id="fs9">type Side =<br />&#160;&#160;| Buy<br />&#160;&#160;| Sell</div>
+<div class="tip" id="fs10">union case Side.Buy: Side</div>
+<div class="tip" id="fs11">union case Side.Sell: Side</div>
+<div class="tip" id="fs12">Multiple items<br />union case ProductId.ProductId: string -&gt; ProductId<br /><br />--------------------<br />type ProductId = | ProductId of string</div>
+<div class="tip" id="fs13">Multiple items<br />union case Size.Size: decimal -&gt; Size<br /><br />--------------------<br />type Size = | Size of decimal</div>
+<div class="tip" id="fs14">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />--------------------<br />type decimal = System.Decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal</div>
+<div class="tip" id="fs15">Multiple items<br />union case Price.Price: decimal -&gt; Price<br /><br />--------------------<br />type Price = | Price of decimal</div>
+<div class="tip" id="fs16">type TimeInForce =<br />&#160;&#160;| GTC<br />&#160;&#160;| FOK</div>
+<div class="tip" id="fs17">union case TimeInForce.GTC: TimeInForce</div>
+<div class="tip" id="fs18">union case TimeInForce.FOK: TimeInForce</div>
+<div class="tip" id="fs19">type LimitOrder =<br />&#160;&#160;{ClientOrderId: OrderId option;<br />&#160;&#160;&#160;Side: Side;<br />&#160;&#160;&#160;ProductId: ProductId;<br />&#160;&#160;&#160;Size: Size;<br />&#160;&#160;&#160;Price: Price;<br />&#160;&#160;&#160;TimeInForce: TimeInForce;}</div>
+<div class="tip" id="fs20">LimitOrder.ClientOrderId: OrderId option</div>
+<div class="tip" id="fs21">type &#39;T option = Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs22">Multiple items<br />LimitOrder.Side: Side<br /><br />--------------------<br />type Side =<br />&#160;&#160;| Buy<br />&#160;&#160;| Sell</div>
+<div class="tip" id="fs23">Multiple items<br />LimitOrder.ProductId: ProductId<br /><br />--------------------<br />type ProductId = | ProductId of string</div>
+<div class="tip" id="fs24">Multiple items<br />LimitOrder.Size: Size<br /><br />--------------------<br />type Size = | Size of decimal</div>
+<div class="tip" id="fs25">Multiple items<br />LimitOrder.Price: Price<br /><br />--------------------<br />type Price = | Price of decimal</div>
+<div class="tip" id="fs26">Multiple items<br />LimitOrder.TimeInForce: TimeInForce<br /><br />--------------------<br />type TimeInForce =<br />&#160;&#160;| GTC<br />&#160;&#160;| FOK</div>
+<div class="tip" id="fs27">type MarketOrder =<br />&#160;&#160;{ClientOrderId: OrderId option;<br />&#160;&#160;&#160;Side: Side;<br />&#160;&#160;&#160;ProductId: ProductId;<br />&#160;&#160;&#160;Size: Size;}</div>
+<div class="tip" id="fs28">MarketOrder.ClientOrderId: OrderId option</div>
+<div class="tip" id="fs29">Multiple items<br />MarketOrder.Side: Side<br /><br />--------------------<br />type Side =<br />&#160;&#160;| Buy<br />&#160;&#160;| Sell</div>
+<div class="tip" id="fs30">Multiple items<br />MarketOrder.ProductId: ProductId<br /><br />--------------------<br />type ProductId = | ProductId of string</div>
+<div class="tip" id="fs31">Multiple items<br />MarketOrder.Size: Size<br /><br />--------------------<br />type Size = | Size of decimal</div>
+<div class="tip" id="fs32">type OrderType =<br />&#160;&#160;| Limit<br />&#160;&#160;| Market</div>
+<div class="tip" id="fs33">union case OrderType.Limit: OrderType</div>
+<div class="tip" id="fs34">union case OrderType.Market: OrderType</div>
+<div class="tip" id="fs35">type Order =<br />&#160;&#160;| Market of MarketOrder<br />&#160;&#160;| Limit of LimitOrder</div>
+<div class="tip" id="fs36">union case Order.Market: MarketOrder -&gt; Order</div>
+<div class="tip" id="fs37">union case Order.Limit: LimitOrder -&gt; Order</div>
+<div class="tip" id="fs38">val parseOrderType : propName:string -&gt; _arg1:string -&gt; ParserResult&lt;OrderType&gt;</div>
+<div class="tip" id="fs39">val propName : string</div>
+<div class="tip" id="fs40">Multiple items<br />module ParserResult<br /><br />from Saon<br /><br />--------------------<br />type ParserResult&lt;&#39;T&gt; =<br />&#160;&#160;| ParsingFailed of field: string option * message: string<br />&#160;&#160;| ValidationFailed of ValidationFailedMap<br />&#160;&#160;| Success of &#39;T</div>
+<div class="tip" id="fs41">val success : value:&#39;a -&gt; ParserResult&lt;&#39;a&gt;</div>
+<div class="tip" id="fs42">val validationFail : typ:string -&gt; propName:string -&gt; msg:string -&gt; ParserResult&lt;&#39;a&gt;</div>
+<div class="tip" id="fs43">val parseSide : propName:string -&gt; _arg1:string -&gt; ParserResult&lt;Side&gt;</div>
+<div class="tip" id="fs44">val parseTimeInForce : propName:string -&gt; _arg1:string -&gt; ParserResult&lt;TimeInForce&gt;</div>
+<div class="tip" id="fs45">val parsePositiveAmount : (string -&gt; string -&gt; ParserResult&lt;decimal&gt;)</div>
+<div class="tip" id="fs46">module Convert<br /><br />from Saon</div>
+<div class="tip" id="fs47">val stringToDecimal : propName:string -&gt; value:string -&gt; ParserResult&lt;decimal&gt;</div>
+<div class="tip" id="fs48">module Validate<br /><br />from Saon</div>
+<div class="tip" id="fs49">val isGreaterThan : minValue:&#39;T -&gt; propName:string -&gt; value:&#39;T -&gt; ParserResult&lt;&#39;T&gt; (requires comparison)</div>
+<div class="tip" id="fs50">val parseSize : (string -&gt; string -&gt; ParserResult&lt;Size&gt;)</div>
+<div class="tip" id="fs51">val withFunction : func:(&#39;T -&gt; &#39;R) -&gt; string -&gt; value:&#39;T -&gt; ParserResult&lt;&#39;R&gt;</div>
+<div class="tip" id="fs52">val parsePrice : (string -&gt; string -&gt; ParserResult&lt;Price&gt;)</div>
+<div class="tip" id="fs53">val parseLimitOrder : obj</div>
+<div class="tip" id="fs54"></div>
+<div class="tip" id="fs55">Multiple items<br />module Json<br /><br />from Saon.Json<br /><br />--------------------<br />namespace Saon.Json</div>
+<div class="tip" id="fs56">module Option<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs57">val defaultValue : value:&#39;T -&gt; option:&#39;T option -&gt; &#39;T</div>
+<div class="tip" id="fs58">val parseMarketOrder : obj</div>
+<div class="tip" id="fs59">val parseOrder : (obj -&gt; obj)</div>
+<div class="tip" id="fs60">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs61">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs62">val parseOrderPayload : payload:string -&gt; obj</div>
+<div class="tip" id="fs63">val payload : string</div>
+<div class="tip" id="fs64">val document : obj</div>
+<div class="tip" id="fs65">val marketOrderPayload : string</div>
+<div class="tip" id="fs66">val marketOrder : obj</div>
+<div class="tip" id="fs67">val limitOrderPayload : string</div>
+<div class="tip" id="fs68">val limitOrder : obj</div>
+<div class="tip" id="fs69">val badOrderTypePayload : string</div>
+<div class="tip" id="fs70">val sizeIsNotANumber : string</div>
+
+</div>
+    </div>
+</main>
+<footer>
+
+</footer>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/tips.js"></script>
+
+</body>
+</html>
