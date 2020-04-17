@@ -63,7 +63,8 @@ Target.create "GenerateDocs" (fun _ ->
         [ "project-name", "Saon"
           "page-description", ProjectInfo.description
           "page-author", String.separated ", " ProjectInfo.authors
-          "github-link", ProjectInfo.github ]
+          "github-link", ProjectInfo.github
+          "root", "" ]
 
     Shell.copy docsContent [ Paths.root @@ "RELEASE_NOTES.md" ]
     Shell.copyDir Paths.docsOut (Paths.docs </> "assets") FileFilter.allFiles
@@ -75,6 +76,7 @@ Target.create "GenerateDocs" (fun _ ->
               Template = docsTemplate
               ProjectParameters = projInfo
               LayoutRoots = layoutRoots
+              FsiEval = true
               ToolPath = toolPath })
 
     let dllPatterns =

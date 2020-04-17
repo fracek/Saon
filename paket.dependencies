@@ -12,12 +12,16 @@ nuget Microsoft.NET.Test.Sdk
 nuget xunit
 nuget xunit.runner.visualstudio
 
+nuget Giraffe ~> 4.1.0
 
 group FSharpFormattingBuild
   source https://api.nuget.org/v3/index.json
 
   nuget FSharp.Formatting
   nuget FSharp.Formatting.CommandTool
+  // used in tutorial
+  nuget Microsoft.AspNetCore.Http.Features ~> 3.1.0
+  nuget Microsoft.Extensions.Primitives ~> 3.1.0
 
 
 // [ FAKE GROUP ]

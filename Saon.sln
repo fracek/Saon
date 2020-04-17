@@ -42,8 +42,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{FC16D3C2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{2C4645F3-3557-4866-999E-E94B9EFE10FA}"
 ProjectSection(SolutionItems) = preProject
-	docs\content\index.md = docs\content\index.md
-	docs\content\gettingstarted.md = docs\content\gettingstarted.md
+	docs\content\index.fsx = docs\content\index.fsx
+	docs\content\convert-tutorial.fsx = docs\content\convert-tutorial.fsx
+	docs\content\json-tutorial.fsx = docs\content\json-tutorial.fsx
+	docs\content\query-tutorial.fsx = docs\content\query-tutorial.fsx
+	docs\content\validate-tutorial.fsx = docs\content\validate-tutorial.fsx
+	docs\content\giraffe-tutorial.fsx = docs\content\giraffe-tutorial.fsx
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{3CC95212-808C-4372-9E04-F77A1FC08FF4}"
@@ -66,6 +70,10 @@ ProjectSection(SolutionItems) = preProject
 	docs\assets\style.css = docs\assets\style.css
 	docs\assets\tips.js = docs\assets\tips.js
 EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{34DB56E7-BADB-42AF-9D5B-C06F8DC6FF18}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GiraffeHttp", "samples\GiraffeHttp\GiraffeHttp.fsproj", "{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,6 +172,18 @@ Global
 		{A0720523-E5B1-4D81-B837-D499DCFFE10D}.Release|x64.Build.0 = Release|Any CPU
 		{A0720523-E5B1-4D81-B837-D499DCFFE10D}.Release|x86.ActiveCfg = Release|Any CPU
 		{A0720523-E5B1-4D81-B837-D499DCFFE10D}.Release|x86.Build.0 = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|x64.Build.0 = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Debug|x86.Build.0 = Debug|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|x64.ActiveCfg = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|x64.Build.0 = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|x86.ActiveCfg = Release|Any CPU
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B7F27190-62E6-4055-8F42-422345C9E0C4} = {1A46DCF9-A66B-40CF-85AA-F8AF7208A3E8}
@@ -178,5 +198,6 @@ Global
 		{3CC95212-808C-4372-9E04-F77A1FC08FF4} = {FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}
 		{A781098B-161F-4250-BB16-953B87782C69} = {3CC95212-808C-4372-9E04-F77A1FC08FF4}
 		{D317D890-73C0-4CAD-B0CE-573837788B2D} = {FC16D3C2-DE2D-487D-A7DC-0A20C4E2DAC5}
+		{6AD9617D-B1A3-4E8A-96FE-7528AF8D1AC8} = {34DB56E7-BADB-42AF-9D5B-C06F8DC6FF18}
 	EndGlobalSection
 EndGlobal
