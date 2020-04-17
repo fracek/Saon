@@ -20,3 +20,12 @@ module ``test isNotNull`` =
         match Validate.isNotNull "s" null with
         | ValidationFailed _ -> ()
         | _ -> failwith "expected ValidationFailed"
+
+
+module ``test hasMinLength`` =
+    [<Fact>]
+    let ``works with strings`` () =
+        match Validate.hasMinLength 5 "" "foobar" with
+        | Success result ->
+            ()
+        | _ -> failwith "expected Success"

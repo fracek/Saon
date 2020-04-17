@@ -1,6 +1,7 @@
 # Release Notes
 
 ## 1.0.2-pre1 - Next
+ * Improve `hasMinLength`, `hasMaxLength` and `hasLengthBetween` validators
  * Add `stringToGuid` converter
  * Fix `hasLengthBetween` validator
  * Improve documentation
