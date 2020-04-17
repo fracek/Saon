@@ -132,9 +132,6 @@ Target.create "Release" ignore
 
 "Clean" ==> "Build" ==> "Test" ==> "Default"
 
-"Default"
-"Default"
-"Default"
 "Default" ==> "Pack" ==> "NugetPush" ==> "Release"
 
 Target.runOrDefault "Default"

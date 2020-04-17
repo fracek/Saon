@@ -20,3 +20,13 @@ jobs:
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: ./build.sh --target Release
+      - name: Generate Documentation
+        if: github.ref == 'refs/heads/master'
+        run: ./build.sh --target GenerateDocs
+      - name: Publish Documentation
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs/output
