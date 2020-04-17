@@ -64,7 +64,7 @@ Target.create "GenerateDocs" (fun _ ->
           "page-description", ProjectInfo.description
           "page-author", String.separated ", " ProjectInfo.authors
           "github-link", ProjectInfo.github
-          "root", "" ]
+          "root", "https://fracek.github.io/saon" ]
 
     Shell.copy docsContent [ Paths.root @@ "RELEASE_NOTES.md" ]
     Shell.copyDir Paths.docsOut (Paths.docs </> "assets") FileFilter.allFiles

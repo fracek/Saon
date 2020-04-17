@@ -25,8 +25,7 @@ jobs:
         run: ./build.sh --target GenerateDocs
       - name: Publish Documentation
         if: github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: docs/output
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FOLDER: ./docs/output
