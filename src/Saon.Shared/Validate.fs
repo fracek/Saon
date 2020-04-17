@@ -77,28 +77,30 @@ let isNotEmpty : Validator<seq<'T>> =
             ParserResult.validationFail "isNotEmpty" propName "must be not empty"
 
 /// Validate if `value` is at least `minLength` elements long.
-let hasMinLength minLength : Validator<seq<'T>> =
-    fun propName (value : seq<'T>) ->
-        if Seq.length value >= minLength then
+let inline hasMinLength< ^T when ^T : (member Length : int ) >  minLength : Validator< ^T > =
+    fun propName (value : ^T) ->
+        let len = (^T : (member Length : int) value)
+        if len >= minLength then
             ParserResult.success value
         else
             let msg = sprintf "must be at least %O elements long" minLength
             ParserResult.validationFail "hasMinLength" propName msg
 
 /// Validate if `value` is at most `maxLength` elements long.
-let hasMaxLength maxLength : Validator<seq<'T>> =
-    fun propName (value : seq<'T>) ->
-        if Seq.length value <= maxLength then
+let inline hasMaxLength< ^T when ^T : (member Length : int ) > maxLength : Validator< ^T > =
+    fun propName (value : ^T) ->
+        let len = (^T : (member Length : int) value)
+        if len <= maxLength then
             ParserResult.success value
         else
             let msg = sprintf "must be at most %O elements long" maxLength
             ParserResult.validationFail "hasMaxLength" propName msg
 
 /// Validate if `value` length is between `minLength` and `maxLength`.
-let hasLengthBetween minLength maxLength : Validator<seq<'T>> =
-    fun propName (value : seq<'T>) ->
-        let length = Seq.length value
-        if minLength <= length && length <= maxLength then
+let inline hasLengthBetween< ^T when ^T : (member Length : int ) > minLength maxLength : Validator< ^T > =
+    fun propName (value : ^T) ->
+        let len = (^T : (member Length : int) value)
+        if minLength <= len && len <= maxLength then
             ParserResult.success value
         else
             let msg = sprintf "must be between %O and %O elements long" minLength maxLength
