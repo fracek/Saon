@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.0.2-pre5 - Next
+## 1.0.2-pre6 - Next
  * Trigger build
  
 ## 1.0.2-pre1 - (2020-04-17)
