@@ -43,11 +43,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{2C4645F3-3557-4866-999E-E94B9EFE10FA}"
 ProjectSection(SolutionItems) = preProject
 	docs\content\index.fsx = docs\content\index.fsx
-	docs\content\convert-tutorial.fsx = docs\content\convert-tutorial.fsx
 	docs\content\json-tutorial.fsx = docs\content\json-tutorial.fsx
 	docs\content\query-tutorial.fsx = docs\content\query-tutorial.fsx
-	docs\content\validate-tutorial.fsx = docs\content\validate-tutorial.fsx
 	docs\content\giraffe-tutorial.fsx = docs\content\giraffe-tutorial.fsx
+	docs\content\validate-convert-tutorial.fsx = docs\content\validate-convert-tutorial.fsx
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{3CC95212-808C-4372-9E04-F77A1FC08FF4}"

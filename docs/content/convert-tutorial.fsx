@@ -1,3 +1,0 @@
-(**
-# Tutorial: Convert between types
-*)

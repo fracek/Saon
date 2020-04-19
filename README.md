@@ -9,22 +9,48 @@
 
 ## Goals
 
- - Parse _idiomatic_ JSON payloads into _strongly-typed_ F# objects
- - Continue validating the payload even after one validation fails
+ - Parse _idiomatic_ json payloads into _strongly-typed_ F# objects
+ - Convert json types (string, number, object, array) to F# types
+ - Continue validating the payload even after one validation fails. This is planned for after FS-1063 lands
  - Provide enough information to produce helpful error response
  
-## Usage
+ 
+## Usage & Tutorials
 
-For now, refer to the test files to see Saon in action.
+```f#
+type Email = Email of string
+type ContactDetails =
+    { Name : string
+      Email : Email }
+
+let parseEmail =
+    Validate.isNotEmptyOrWhitespace
+    /> Validate.isEmail
+    /> Convert.withFunction Email
+
+let parseContactDetails = jsonObjectParser {
+    let! name = Json.property "name" (Json.string /> Validate.isNotEmptyOrWhitespace)
+    let! email = Json.property "email" (Json.string /> parseEmail)
+    return { Name = name; Email = email }
+}
+```
+
+We also provide tutorials to help you get started:
+
+ - [Use Saon with Giraffe](https://fracek.github.io/Saon/giraffe-tutorial.html)
+ - [Learn how to define json parsers](https://fracek.github.io/Saon/json-tutorial.html)
+ - [Learn how to parse query strings](https://fracek.github.io/Saon/query-tutorial.html)
+ - [Learn how to validate and convert data](https://fracek.github.io/Saon/validate-convert-tutorial.html)
 
 
 ## Similar Libraries
 
 Saon was inspired by other libraries:
 
- - [forma](https://github.com/mrkkrp/forma): an Haskell library to parse and validate JSON forms.
- - [AccidentalFish.FSharp.Validation](https://github.com/JamesRandall/AccidentalFish.FSharp.Validation): an F# validation framework.
- 
+ - [forma](https://github.com/mrkkrp/forma): an Haskell library to parse and validate json forms
+ - [AccidentalFish.FSharp.Validation](https://github.com/JamesRandall/AccidentalFish.FSharp.Validation): an F# validation framework
+ - [Chiron](https://github.com/xyncro/chiron): also uses computational expressions to parse json
+
  
 ## LICENSE
 
