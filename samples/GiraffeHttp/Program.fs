@@ -12,14 +12,20 @@ open Giraffe
 
 module Model =
     type Email = Email of string
+    type Phone = Phone of string * string
     type LookupType = LookupName | LookupEmail
     type Lookup =
         | LookupName of string
         | LookupEmail of Email
 
+    [<RequireQualifiedAccess>]
+    type Contact =
+        | Email of Email
+        | Phone of Phone
+
     type ContactDetails =
         { Name : string
-          Email : Email }
+          Contact : Contact }
 
 
 module Dto =
@@ -34,10 +40,25 @@ module Dto =
         /> Validate.isEmail
         /> Convert.withFunction Email
 
+    let parseContact = jsonObjectParser {
+        let! typ = Json.property "type" Json.string
+        match typ with
+        | "email" ->
+            let! email = Json.property "email" (Json.string /> parseEmail)
+            return Contact.Email email
+        | _ ->
+            let! prefix = Json.property "prefix" (Json.string /> Validate.hasMinLength 2)
+            let! number = Json.property "number" (Json.string /> Validate.hasMinLength 3)
+            return Contact.Phone (Phone (prefix, number))
+    }
+
     let parseContactDetails = jsonObjectParser {
         let! name = Json.property "name" (Json.string /> Validate.isNotEmptyOrWhitespace)
-        let! email = Json.property "email" (Json.string /> parseEmail)
-        return { Name = name; Email = email }
+        let! contact =
+            [ "email", Json.string /> parseEmail /> Convert.withFunction Contact.Email
+              "contact", Json.object parseContact ]
+            |> Json.oneOf
+        return { Name = name; Contact = contact }
     }
 
     let parseLookupType paramName = function
@@ -82,9 +103,7 @@ module Helper =
 
     let bindQuery<'T> (parse : IQueryCollection -> ParserResult<'T>) (handler : 'T -> HttpHandler) : HttpHandler =
         fun next (ctx : HttpContext) ->
-            task {
-                return! handleParserResult (parse ctx.Request.Query) handler next ctx
-            }
+            handleParserResult (parse ctx.Request.Query) handler next ctx
 
 
 module Handler =

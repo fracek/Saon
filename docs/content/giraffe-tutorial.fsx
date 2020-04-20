@@ -92,9 +92,7 @@ module Helper =
 
     let bindQuery<'T> (parse : IQueryCollection -> ParserResult<'T>) (handler : 'T -> HttpHandler) : HttpHandler =
         fun next (ctx : HttpContext) ->
-            task {
-                return! handleParserResult (parse ctx.Request.Query) handler next ctx
-            }
+            handleParserResult (parse ctx.Request.Query) handler next ctx
 
 (**
 ## Http handling
@@ -220,4 +218,72 @@ Likewise for the lookup endpoint
       },
       "message": "validation failed"
     }
+
+
+## Evolving APIs
+
+APIs are seldom static and they tend to change over time. F# and Saon make it easy to build API endpoints that are
+backward compatible.
+
+In this example, we change the `ContactDetails` type so that users can be contacted either by email or phone.
+The endpoint will accept two types of payload, the old legacy one:
+
+    { "name": "Su", "email": "su@foo.bar" }
+
+And a new one:
+
+    { "name": "Su", "contact": {"type": "email", "email": "su@foo.bar" } }
+
+Or
+
+    { "name": "Su", "contact": {"type": "phone", "prefix": "+44", "number": "1234567" } }
+
+
+We start by changing the definition of `ContactDetails` to the following:
+*)
+
+type Phone = Phone of string * string
+
+[<RequireQualifiedAccess>]
+type Contact =
+    | Email of Email
+    | Phone of Phone
+
+type ContactDetails =
+    { Name : string
+      Contact : Contact }
+
+(**
+Then we define a parser for the new `Contact` type, and update the old contact details parser.
+*)
+
+let parseContact = jsonObjectParser {
+    let! typ = Json.property "type" Json.string
+    match typ with
+    | "email" ->
+        let! email = Json.property "email" (Json.string /> parseEmail)
+        return Contact.Email email
+    | _ ->
+        let! prefix = Json.property "prefix" (Json.string /> Validate.hasMinLength 2)
+        let! number = Json.property "number" (Json.string /> Validate.hasMinLength 3)
+        return Contact.Phone (Phone (prefix, number))
+}
+
+let parseContactDetails = jsonObjectParser {
+    let! name = Json.property "name" (Json.string /> Validate.isNotEmptyOrWhitespace)
+    let! contact =
+        [ "email", Json.string /> parseEmail /> Convert.withFunction Contact.Email
+          "contact", Json.object parseContact ]
+        |> Json.oneOf
+    return { Name = name; Contact = contact }
+}
+
+(**
+Notice we use the function `Json.oneOf` to parse the contact details. This function takes a list of property names
+and transformers, then returns the value of the transformers applied to the first property that matches one of the
+properties. If you need a stricter behaviour, `Json.onlyOneOf` returns success if only one property matches.
+
+After updating the parser we can update the application logic to handle the new contact type. Notice that from the
+business logic point of view, we only need to handle the new API and do not have to deal with the old one. When we
+are ready to drop support for the old payload, we only need to update the parser _without changing the business logic_.
 *)

@@ -18,3 +18,15 @@ Content-Type: application/json
 
 ### Validation failure.
 GET http://localhost:5000/?type=email&value=su
+
+### New payload
+POST http://localhost:5000/
+Content-Type: application/json
+
+{ "name": "Su", "contact": {"type":  "email", "email": "su@foo.bar" } }
+
+### Ad phone contact
+POST http://localhost:5000/
+Content-Type: application/json
+
+{ "name": "Su", "contact": {"type":  "phone", "prefix": "+44", "number": "1234567" } }
