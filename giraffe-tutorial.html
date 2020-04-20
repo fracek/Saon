@@ -174,8 +174,6 @@ Giraffe own <code>bindJson</code> and <code>bindQueryString</code>, the differen
 <span class="l">24: </span>
 <span class="l">25: </span>
 <span class="l">26: </span>
-<span class="l">27: </span>
-<span class="l">28: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="m">Helper</span> <span class="o">=</span>
     <span class="k">open</span> <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="id">Microsoft</span><span class="pn">.</span><span class="id">AspNetCore</span><span class="pn">.</span><span class="id">Http</span><span class="pn">.</span><span class="id">Features</span>
@@ -202,9 +200,7 @@ Giraffe own <code>bindJson</code> and <code>bindQueryString</code>, the differen
 
     <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 63)" onmouseover="showTip(event, 'fs31', 63)" class="fn">bindQuery</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs27', 64)" onmouseover="showTip(event, 'fs27', 64)" class="fn">parse</span> <span class="pn">:</span> <span class="id">IQueryCollection</span> <span class="k">-&gt;</span> <span class="id">ParserResult</span><span class="pn">&lt;</span><span class="id">&#39;</span><span class="id">T</span><span class="pn">&gt;</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs28', 65)" onmouseover="showTip(event, 'fs28', 65)" class="fn">handler</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">T</span> <span class="k">-&gt;</span> <span class="id">HttpHandler</span><span class="pn">)</span> <span class="pn">:</span> <span class="id">HttpHandler</span> <span class="o">=</span>
         <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs29', 66)" onmouseover="showTip(event, 'fs29', 66)" class="id">next</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs30', 67)" onmouseover="showTip(event, 'fs30', 67)" class="id">ctx</span> <span class="pn">:</span> <span class="id">HttpContext</span><span class="pn">)</span> <span class="k">-&gt;</span>
-            <span class="id">task</span> <span class="pn">{</span>
-                <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs23', 68)" onmouseover="showTip(event, 'fs23', 68)" class="id">handleParserResult</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs27', 69)" onmouseover="showTip(event, 'fs27', 69)" class="id">parse</span> <span onmouseout="hideTip(event, 'fs30', 70)" onmouseover="showTip(event, 'fs30', 70)" class="id">ctx</span><span class="pn">.</span><span class="id">Request</span><span class="pn">.</span><span class="id">Query</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="id">handler</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="id">next</span> <span onmouseout="hideTip(event, 'fs30', 73)" onmouseover="showTip(event, 'fs30', 73)" class="id">ctx</span>
-            <span class="pn">}</span>
+            <span onmouseout="hideTip(event, 'fs23', 68)" onmouseover="showTip(event, 'fs23', 68)" class="fn">handleParserResult</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs27', 69)" onmouseover="showTip(event, 'fs27', 69)" class="fn">parse</span> <span onmouseout="hideTip(event, 'fs30', 70)" onmouseover="showTip(event, 'fs30', 70)" class="id">ctx</span><span class="pn">.</span><span class="id">Request</span><span class="pn">.</span><span class="id">Query</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="fn">handler</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="id">next</span> <span onmouseout="hideTip(event, 'fs30', 73)" onmouseover="showTip(event, 'fs30', 73)" class="id">ctx</span>
 </code></pre></td>
 </tr>
 </table>
@@ -425,6 +421,107 @@ Giraffe own <code>bindJson</code> and <code>bindQueryString</code>, the differen
 </code></pre></td>
 </tr>
 </table>
+<h2><a name="Evolving-APIs" class="anchor" href="#Evolving-APIs">Evolving APIs</a></h2>
+<p>APIs are seldom static and they tend to change over time. F# and Saon make it easy to build API endpoints that are
+backward compatible.</p>
+<p>In this example, we change the <code>ContactDetails</code> type so that users can be contacted either by email or phone.
+The endpoint will accept two types of payload, the old legacy one:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pn">{</span> <span class="s">&quot;name&quot;</span><span class="pn">:</span> <span class="s">&quot;Su&quot;</span><span class="pn">,</span> <span class="s">&quot;email&quot;</span><span class="pn">:</span> <span class="s">&quot;su@foo.bar&quot;</span> <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>And a new one:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pn">{</span> <span class="s">&quot;name&quot;</span><span class="pn">:</span> <span class="s">&quot;Su&quot;</span><span class="pn">,</span> <span class="s">&quot;contact&quot;</span><span class="pn">:</span> <span class="pn">{</span><span class="s">&quot;type&quot;</span><span class="pn">:</span> <span class="s">&quot;email&quot;</span><span class="pn">,</span> <span class="s">&quot;email&quot;</span><span class="pn">:</span> <span class="s">&quot;su@foo.bar&quot;</span> <span class="pn">}</span> <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Or</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pn">{</span> <span class="s">&quot;name&quot;</span><span class="pn">:</span> <span class="s">&quot;Su&quot;</span><span class="pn">,</span> <span class="s">&quot;contact&quot;</span><span class="pn">:</span> <span class="pn">{</span><span class="s">&quot;type&quot;</span><span class="pn">:</span> <span class="s">&quot;phone&quot;</span><span class="pn">,</span> <span class="s">&quot;prefix&quot;</span><span class="pn">:</span> <span class="s">&quot;+44&quot;</span><span class="pn">,</span> <span class="s">&quot;number&quot;</span><span class="pn">:</span> <span class="s">&quot;1234567&quot;</span> <span class="pn">}</span> <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>We start by changing the definition of <code>ContactDetails</code> to the following:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs45', 114)" onmouseover="showTip(event, 'fs45', 114)" class="rt">Phone</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 115)" onmouseover="showTip(event, 'fs45', 115)" class="uc">Phone</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 116)" onmouseover="showTip(event, 'fs2', 116)" class="rt">string</span> <span class="pn">*</span> <span onmouseout="hideTip(event, 'fs2', 117)" onmouseover="showTip(event, 'fs2', 117)" class="rt">string</span>
+
+<span class="pn">[&lt;</span><span onmouseout="hideTip(event, 'fs46', 118)" onmouseover="showTip(event, 'fs46', 118)" class="rt">RequireQualifiedAccess</span><span class="pn">&gt;]</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs47', 119)" onmouseover="showTip(event, 'fs47', 119)" class="rt">Contact</span> <span class="o">=</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs48', 120)" onmouseover="showTip(event, 'fs48', 120)" class="uc">Email</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs48', 121)" onmouseover="showTip(event, 'fs48', 121)" class="id">Email</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs49', 122)" onmouseover="showTip(event, 'fs49', 122)" class="uc">Phone</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs49', 123)" onmouseover="showTip(event, 'fs49', 123)" class="rt">Phone</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs50', 124)" onmouseover="showTip(event, 'fs50', 124)" class="rt">ContactDetails</span> <span class="o">=</span>
+    <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs10', 125)" onmouseover="showTip(event, 'fs10', 125)" class="id">Name</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs2', 126)" onmouseover="showTip(event, 'fs2', 126)" class="rt">string</span>
+      <span onmouseout="hideTip(event, 'fs51', 127)" onmouseover="showTip(event, 'fs51', 127)" class="id">Contact</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs47', 128)" onmouseover="showTip(event, 'fs47', 128)" class="rt">Contact</span> <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Then we define a parser for the new <code>Contact</code> type, and update the old contact details parser.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 129)" onmouseover="showTip(event, 'fs52', 129)" class="id">parseContact</span> <span class="o">=</span> <span class="id">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">typ</span> <span class="o">=</span> <span class="id">Json</span><span class="pn">.</span><span class="id">property</span> <span class="s">&quot;type&quot;</span> <span class="id">Json</span><span class="pn">.</span><span class="id">string</span>
+    <span class="k">match</span> <span class="id">typ</span> <span class="k">with</span>
+    <span class="pn">|</span> <span class="s">&quot;email&quot;</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">email</span> <span class="o">=</span> <span class="id">Json</span><span class="pn">.</span><span class="id">property</span> <span class="s">&quot;email&quot;</span> <span class="pn">(</span><span class="id">Json</span><span class="pn">.</span><span class="id">string</span> <span class="o">/&gt;</span> <span class="id">parseEmail</span><span class="pn">)</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs47', 130)" onmouseover="showTip(event, 'fs47', 130)" class="id">Contact</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs48', 131)" onmouseover="showTip(event, 'fs48', 131)" class="id">Email</span> <span class="id">email</span>
+    <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span>
+        <span class="k">let!</span> <span class="id">prefix</span> <span class="o">=</span> <span class="id">Json</span><span class="pn">.</span><span class="id">property</span> <span class="s">&quot;prefix&quot;</span> <span class="pn">(</span><span class="id">Json</span><span class="pn">.</span><span class="id">string</span> <span class="o">/&gt;</span> <span class="id">Validate</span><span class="pn">.</span><span class="id">hasMinLength</span> <span class="n">2</span><span class="pn">)</span>
+        <span class="k">let!</span> <span class="id">number</span> <span class="o">=</span> <span class="id">Json</span><span class="pn">.</span><span class="id">property</span> <span class="s">&quot;number&quot;</span> <span class="pn">(</span><span class="id">Json</span><span class="pn">.</span><span class="id">string</span> <span class="o">/&gt;</span> <span class="id">Validate</span><span class="pn">.</span><span class="id">hasMinLength</span> <span class="n">3</span><span class="pn">)</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs47', 132)" onmouseover="showTip(event, 'fs47', 132)" class="id">Contact</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs53', 133)" onmouseover="showTip(event, 'fs53', 133)" class="id">Phone</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs45', 134)" onmouseover="showTip(event, 'fs45', 134)" class="id">Phone</span> <span class="pn">(</span><span class="id">prefix</span><span class="pn">,</span> <span class="id">number</span><span class="pn">)</span><span class="pn">)</span>
+<span class="pn">}</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 135)" onmouseover="showTip(event, 'fs14', 135)" class="id">parseContactDetails</span> <span class="o">=</span> <span class="id">jsonObjectParser</span> <span class="pn">{</span>
+    <span class="k">let!</span> <span class="id">name</span> <span class="o">=</span> <span class="id">Json</span><span class="pn">.</span><span class="id">property</span> <span class="s">&quot;name&quot;</span> <span class="pn">(</span><span class="id">Json</span><span class="pn">.</span><span class="id">string</span> <span class="o">/&gt;</span> <span class="id">Validate</span><span class="pn">.</span><span class="id">isNotEmptyOrWhitespace</span><span class="pn">)</span>
+    <span class="k">let!</span> <span class="id">contact</span> <span class="o">=</span>
+        <span class="pn">[</span> <span class="s">&quot;email&quot;</span><span class="pn">,</span> <span class="id">Json</span><span class="pn">.</span><span class="id">string</span> <span class="o">/&gt;</span> <span class="id">parseEmail</span> <span class="o">/&gt;</span> <span class="id">Convert</span><span class="pn">.</span><span class="id">withFunction</span> <span onmouseout="hideTip(event, 'fs47', 136)" onmouseover="showTip(event, 'fs47', 136)" class="id">Contact</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs48', 137)" onmouseover="showTip(event, 'fs48', 137)" class="id">Email</span>
+          <span class="s">&quot;contact&quot;</span><span class="pn">,</span> <span class="id">Json</span><span class="pn">.</span><span class="id">object</span> <span onmouseout="hideTip(event, 'fs52', 138)" onmouseover="showTip(event, 'fs52', 138)" class="id">parseContact</span> <span class="pn">]</span>
+        <span class="o">|&gt;</span> <span class="id">Json</span><span class="pn">.</span><span class="id">oneOf</span>
+    <span class="k">return</span> <span class="pn">{</span> <span class="id">Name</span> <span class="o">=</span> <span class="id">name</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs47', 139)" onmouseover="showTip(event, 'fs47', 139)" class="id">Contact</span> <span class="o">=</span> <span class="id">contact</span> <span class="pn">}</span>
+<span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Notice we use the function <code>Json.oneOf</code> to parse the contact details. This function takes a list of property names
+and transformers, then returns the value of the transformers applied to the first property that matches one of the
+properties. If you need a stricter behaviour, <code>Json.onlyOneOf</code> returns success if only one property matches.</p>
+<p>After updating the parser we can update the application logic to handle the new contact type. Notice that from the
+business logic point of view, we only need to handle the new API and do not have to deal with the old one. When we
+are ready to drop support for the old payload, we only need to update the parser <em>without changing the business logic</em>.</p>
 
 	<div class="tip" id="fs1">Multiple items<br />union case Email.Email: string -&gt; Email<br /><br />--------------------<br />type Email = | Email of string</div>
 <div class="tip" id="fs2">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />--------------------<br />type string = System.String</div>
@@ -470,6 +567,15 @@ Giraffe own <code>bindJson</code> and <code>bindQueryString</code>, the differen
 <div class="tip" id="fs42">module Helper<br /><br />from Giraffe-tutorial</div>
 <div class="tip" id="fs43">module Dto<br /><br />from Giraffe-tutorial</div>
 <div class="tip" id="fs44">Multiple items<br />module Handler<br /><br />from Giraffe-tutorial<br /><br />--------------------<br />type Handler&lt;&#39;T&gt; =<br />&#160;&#160;delegate of obj * &#39;T -&gt; unit</div>
+<div class="tip" id="fs45">Multiple items<br />union case Phone.Phone: string * string -&gt; Phone<br /><br />--------------------<br />type Phone = | Phone of string * string</div>
+<div class="tip" id="fs46">Multiple items<br />type RequireQualifiedAccessAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; RequireQualifiedAccessAttribute<br /><br />--------------------<br />new : unit -&gt; RequireQualifiedAccessAttribute</div>
+<div class="tip" id="fs47">type Contact =<br />&#160;&#160;| Email of obj<br />&#160;&#160;| Phone of Phone</div>
+<div class="tip" id="fs48">union case Contact.Email: obj -&gt; Contact</div>
+<div class="tip" id="fs49">Multiple items<br />union case Contact.Phone: Phone -&gt; Contact<br /><br />--------------------<br />type Phone = | Phone of string * string</div>
+<div class="tip" id="fs50">type ContactDetails =<br />&#160;&#160;{Name: string;<br />&#160;&#160;&#160;Contact: Contact;}</div>
+<div class="tip" id="fs51">Multiple items<br />ContactDetails.Contact: Contact<br /><br />--------------------<br />type Contact =<br />&#160;&#160;| Email of obj<br />&#160;&#160;| Phone of Phone</div>
+<div class="tip" id="fs52">val parseContact : obj</div>
+<div class="tip" id="fs53">union case Contact.Phone: Phone -&gt; Contact</div>
 
 </div>
     </div>
