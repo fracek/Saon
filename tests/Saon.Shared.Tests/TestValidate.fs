@@ -26,6 +26,23 @@ module ``test hasMinLength`` =
     [<Fact>]
     let ``works with strings`` () =
         match Validate.hasMinLength 5 "" "foobar" with
-        | Success result ->
+        | Success _ ->
             ()
         | _ -> failwith "expected Success"
+        
+    [<Fact>]
+    let ``works with sequences`` () =
+        match Validate.hasMinLength 3 "" [1; 2; 3] with
+        | Success _ ->
+            ()
+        | _ -> failwith "expected Success"
+        
+        
+module ``test isIn`` =
+    [<Fact>]
+    let ``works with lists`` () =
+        match Validate.isIn [1; 2; 3] "" 3 with
+        | Success 3 ->
+            ()
+        | _ -> failwith "expected Success"
+        
