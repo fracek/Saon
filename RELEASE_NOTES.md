@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.0.2 - (2020-08-10)
+ * Change `isIn` definition to be inline
+ 
 ## 1.0.2-pre7 - (2020-04-19)
  * Improved documentation
  
